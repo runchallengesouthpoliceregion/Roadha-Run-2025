@@ -204,16 +204,17 @@
             color: #5053e6;
         }
 
+        /* Updated Digital Bib Styles */
         .bib-container {
             display: none;
             margin-top: 15px;
-            padding: 4px;
-            background-color: #343247; /* Fallback background color */
+            padding: 20px;
+            background-color: #343247;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(50, 49, 49, 0.1);
             text-align: center;
             position: relative;
-            overflow: hidden; /* Ensure the pseudo-element doesn't overflow */
+            overflow: hidden;
         }
 
         .bib-container::before {
@@ -223,20 +224,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('LOGO JERSY.png'); /* Add your background image URL */
+            background-image: url('LOGO JERSY.png');
             background-size: cover;
             background-position: center;
-            opacity: 0.4; /* Set opacity for the background image */
-            z-index: 1; /* Place it behind the content */
+            opacity: 0.4;
+            z-index: 1;
         }
 
         .bib-container > * {
             position: relative;
-            z-index: 2; /* Ensure content is above the background image */
+            z-index: 2;
         }
 
         .bib-header {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #f7f7f7;
             margin-bottom: 10px;
@@ -265,14 +266,35 @@
 
         .bib-logos {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: flex-end; /* Align to the right */
+            align-items: center;
+            gap: 10px;
             margin-top: 40px;
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .bib-logos img {
-            width: 50px;
-            height: 50px;
+            width: 100px;
+            height: 8px;
+        }
+
+        .we-blues {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #f5f4f4;
+        }
+
+        .south-police-region {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #f7f7f7;
+            margin-top: 10px;
+            text-align: center;
         }
 
         /* Broken Blast Animation */
@@ -323,9 +345,12 @@
             <div class="bib-nickname" id="bibNickname"></div>
             <div class="bib-event">1446 qnar adOr</div>
             <div class="bib-logos">
-                <img src="LOGO JERSY.png" alt="Logo 1">
-                
+                <div class="logo-container">
+                    <img src="IMG_20250228_222427_743.jpg" alt="Logo 1">
+                    <div class="we-blues">WE BLUES</div>
+                </div>
             </div>
+            <div class="south-police-region">SOUTH POLICE REGION</div>
         </div>
 
         <!-- Auto-Fill Search Bar -->
