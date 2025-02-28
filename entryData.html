@@ -18,6 +18,19 @@
       margin-bottom: 20px;
     }
 
+    .filters {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .filters input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -53,10 +66,39 @@
     .status-rejected {
       color: #f44336;
     }
+
+    .highlight {
+      background-color: #ffff99;
+    }
+
+    .delete-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #d32f2f;
+    }
+
+    .total-distance {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>Running Logs</h1>
+  <div class="filters">
+    <input type="text" id="searchInput" placeholder="Search by Contact or BIB Number...">
+    <input type="date" id="startDate" placeholder="Start Date">
+    <input type="date" id="endDate" placeholder="End Date">
+  </div>
   <table id="runningLogsTable">
     <thead>
       <tr>
@@ -67,18 +109,22 @@
         <th>Nickname</th>
         <th>Distance (km)</th>
         <th>Status</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <!-- Data will be inserted here dynamically -->
     </tbody>
   </table>
+  <div class="total-distance">
+    Total Distance: <span id="totalDistance">0</span> km
+  </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script>
-    // Firebase Configuration 2 (Same as in the first file)
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyClxIK0xiQh4XGZTgYuRHqq5xNT7iIGYjw",
       authDomain: "runninglog-f16f7.firebaseapp.com",
@@ -113,14 +159,71 @@
               <td>${log.nickname}</td>
               <td>${log.distance}</td>
               <td class="status-${log.status}">${log.status}</td>
+              <td><button class="delete-btn" data-key="${key}">Delete</button></td>
             `;
             tableBody.appendChild(row);
           });
+
+          // Add event listeners to delete buttons
+          document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', deleteLog);
+          });
+
+          // Apply filters after data is loaded
+          applyFilters();
         } else {
-          tableBody.innerHTML = '<tr><td colspan="7">No data available</td></tr>';
+          tableBody.innerHTML = '<tr><td colspan="8">No data available</td></tr>';
         }
       });
     }
+
+    // Delete Log Function
+    function deleteLog(event) {
+      const key = event.target.getAttribute('data-key');
+      const runningLogsRef = database.ref('runningLogs/' + key);
+      runningLogsRef.remove()
+        .then(() => {
+          alert('Log deleted successfully!');
+        })
+        .catch((error) => {
+          console.error('Error deleting log: ', error);
+        });
+    }
+
+    // Apply Filters and Calculate Total Distance
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      const rows = document.querySelectorAll('#runningLogsTable tbody tr');
+      let totalDistance = 0;
+
+      rows.forEach(row => {
+        const contact = row.cells[1].textContent.toLowerCase();
+        const bibNumber = row.cells[2].textContent.toLowerCase();
+        const date = row.cells[0].textContent;
+        const distance = parseFloat(row.cells[5].textContent);
+
+        // Check if the row matches the search term and date range
+        const matchesSearch = contact.includes(searchTerm) || bibNumber.includes(searchTerm);
+        const matchesDateRange = (!startDate || date >= startDate) && (!endDate || date <= endDate);
+
+        if (matchesSearch && matchesDateRange) {
+          row.classList.add('highlight');
+          totalDistance += distance;
+        } else {
+          row.classList.remove('highlight');
+        }
+      });
+
+      // Update total distance
+      document.getElementById('totalDistance').textContent = totalDistance.toFixed(2);
+    }
+
+    // Add event listeners to filters
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('startDate').addEventListener('change', applyFilters);
+    document.getElementById('endDate').addEventListener('change', applyFilters);
 
     // Fetch data on page load
     fetchRunningLogs();
