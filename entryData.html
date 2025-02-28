@@ -31,6 +31,21 @@
       margin-right: 10px;
     }
 
+    .export-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+
+    .export-btn:hover {
+      background-color: #45a049;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -98,6 +113,7 @@
     <input type="text" id="searchInput" placeholder="Search by Contact or BIB Number...">
     <input type="date" id="startDate" placeholder="Start Date">
     <input type="date" id="endDate" placeholder="End Date">
+    <button class="export-btn" id="exportPdf">Export to PDF</button>
   </div>
   <table id="runningLogsTable">
     <thead>
@@ -123,6 +139,8 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <!-- jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     // Firebase Configuration
     const firebaseConfig = {
@@ -220,10 +238,53 @@
       document.getElementById('totalDistance').textContent = totalDistance.toFixed(2);
     }
 
+    // Export to PDF Function
+    function exportToPdf() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Add title
+      doc.setFontSize(18);
+      doc.text("Running Logs", 10, 10);
+
+      // Get filtered table data
+      const headers = [];
+      const rows = [];
+      document.querySelectorAll('#runningLogsTable thead th').forEach(header => {
+        headers.push(header.textContent);
+      });
+      document.querySelectorAll('#runningLogsTable tbody tr').forEach(row => {
+        if (row.classList.contains('highlight')) {
+          const rowData = [];
+          row.querySelectorAll('td').forEach(cell => {
+            rowData.push(cell.textContent);
+          });
+          rows.push(rowData);
+        }
+      });
+
+      // Add table to PDF
+      doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 20,
+      });
+
+      // Add total distance
+      const totalDistance = document.getElementById('totalDistance').textContent;
+      doc.text(`Total Distance: ${totalDistance} km`, 10, doc.autoTable.previous.finalY + 10);
+
+      // Save the PDF
+      doc.save("running_logs.pdf");
+    }
+
     // Add event listeners to filters
     document.getElementById('searchInput').addEventListener('input', applyFilters);
     document.getElementById('startDate').addEventListener('change', applyFilters);
     document.getElementById('endDate').addEventListener('change', applyFilters);
+
+    // Add event listener to export button
+    document.getElementById('exportPdf').addEventListener('click', exportToPdf);
 
     // Fetch data on page load
     fetchRunningLogs();
