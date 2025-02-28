@@ -177,23 +177,8 @@
       font-weight: bold;
     }
 
-    /* Winners Button Styles */
-    .winners-button-container {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 10px;
-    }
-
-    #winnersButton {
-      background-color: #2196F3; /* Blue color for the button */
-    }
-
-    #winnersButton:hover {
-      background-color: #1e88e5;
-    }
-
-    /* Winners Table Styles */
-    #winnersTableContainer {
+    /* Ranking Table Styles */
+    #rankingTableContainer {
       display: none; /* Initially hidden */
       margin-top: 20px;
     }
@@ -223,24 +208,21 @@
       color: #333;
     }
 
-    /* Topper Section Styles */
-    .topper-section {
-      margin-top: 20px;
-      padding: 8px;
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Highlight Animation */
+    @keyframes highlight {
+      0% {
+        background-color: #ffeb3b; /* Yellow */
+      }
+      50% {
+        background-color: #ffcc80; /* Orange */
+      }
+      100% {
+        background-color: #ffeb3b; /* Yellow */
+      }
     }
 
-    .topper-section h2 {
-      font-size: 1.4em;
-      margin-bottom: 10px;
-    }
-
-    .topper-section p {
-      font-size: 1.0em;
-      margin: 5px 0;
+    .highlight {
+      animation: highlight 1s ease-in-out infinite;
     }
 
     /* Responsive Styles */
@@ -352,40 +334,24 @@
         font-size: 0.8em;
       }
     }
-
-    /* Toggle Button for Top Section */
-    #toggleTopSection {
-      margin-bottom: 10px;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <button id="toggleTopSection">Show Top Section</button>
-    <div id="topSection">
-      <h1> qgol qnar adOr</h1>
+    <h1> qgol qnar adOr</h1>
 
-      <!-- Search Bar for Contact Number -->
-      <input type="text" id="contactSearch" placeholder="Enter full contact number to search...">
+    <!-- Search Bar for Contact Number -->
+    <input type="text" id="contactSearch" placeholder="Enter full contact number to search...">
 
-      <!-- Name Filter Dropdown -->
-      <select id="nameFilter">
-        <option value="">All</option>
-        <!-- Dynamic Name Options will be added here -->
-      </select>
+    <!-- Name Filter Dropdown -->
+    <select id="nameFilter">
+      <option value="">All</option>
+      <!-- Dynamic Name Options will be added here -->
+    </select>
 
-      <div class="total-distance-container">
-        <h2>Total Distance</h2>
-        <p id="totalDistance">0 km</p>
-      </div>
-
-      <!-- Topper Section -->
-      <div class="topper-section">
-        <h2>Top 3 </h2>
-        <p id="topper1">1. - 0 km</p>
-        <p id="topper2">2. - 0 km</p>
-        <p id="topper3">3. - 0 km</p>
-      </div>
+    <div class="total-distance-container">
+      <h2>Total Distance</h2>
+      <p id="totalDistance">0 km</p>
     </div>
 
     <!-- Running Log Section -->
@@ -396,7 +362,7 @@
         🥉 Bronze for 50 km | 🥈 Silver for 75 km | 🥇 Gold for 100 km
       </div>
       <div class="winners-button-container">
-        <button id="winnersButton">Show Winners</button>
+        <button id="rankingButton">Show Ranking</button>
       </div>
     </div>
     <div class="table-container">
@@ -420,24 +386,24 @@
       </table>
     </div>
 
-    <!-- Winners Section -->
-    <div id="winnersTableContainer">
-      <h2>Winners</h2>
+    <!-- Ranking Table Section -->
+    <div id="rankingTableContainer">
+      <h2>Ranking Table</h2>
+      <!-- Search Bar for BIB Number in Ranking Table -->
+      <input type="text" id="bibSearch" placeholder="Enter BIB number to filter ranking...">
       <div class="table-container">
-        <table id="winnersTable">
+        <table id="rankingTable">
           <thead>
             <tr>
-              <th>Position</th>
+              <th>Rank</th>
               <th>Name</th>
-              <th>Nickname</th>
               <th>BIB Number</th>
-              <th style="display: none;">Contact</th> <!-- Hidden Column -->
               <th>Total Distance (km)</th>
               <th>Medals</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Winners will appear here -->
+            <!-- Ranking data will appear here -->
           </tbody>
         </table>
       </div>
@@ -466,7 +432,6 @@
 
     const nameSet = new Set(); // To store unique names for the filter dropdown
     const totalDistanceMap = new Map(); // To store total distance for each person
-    const winners = []; // Array to store winners in order of completion
 
     // Fetch data from Firebase
     const runningLogRef = ref(database, 'runningLogs');
@@ -619,18 +584,11 @@
         totalDistanceMap.set(name, distance);
       }
 
-      // Check if the person has completed 100 km
-      if (totalDistanceMap.get(name) >= 100 && !winners.includes(name)) {
-        winners.push(name); // Add the winner to the array
-        highlightWinner(name);
-        updateWinnersTable(); // Update the winners table
-      }
-
       // Update the medals for the person
       updateMedals(name);
 
-      // Update the top 3 participants
-      updateTop3Participants();
+      // Update the ranking table
+      updateRankingTable();
     }
 
     // Function to update the medals for a person
@@ -663,34 +621,23 @@
       return medals;
     }
 
-    // Function to update the winners table
-    function updateWinnersTable() {
-      const winnersTable = document.getElementById('winnersTable').getElementsByTagName('tbody')[0];
-      winnersTable.innerHTML = ''; // Clear the table
+    // Function to update the ranking table
+    function updateRankingTable() {
+      const rankingTable = document.getElementById('rankingTable').getElementsByTagName('tbody')[0];
+      rankingTable.innerHTML = ''; // Clear the table
 
-      winners.forEach((name, index) => {
-        const row = winnersTable.insertRow();
+      const sortedParticipants = Array.from(totalDistanceMap.entries()).sort((a, b) => b[1] - a[1]);
+
+      sortedParticipants.forEach(([name, distance], index) => {
+        const row = rankingTable.insertRow();
         row.innerHTML = `
           <td>${index + 1}</td>
           <td>${name}</td>
-          <td>${getNickname(name)}</td>
           <td>${getBibNumber(name)}</td> <!-- BIB Number Column -->
-          <td style="display: none;">${getContact(name)}</td>
-          <td>${totalDistanceMap.get(name).toFixed(2)} km</td>
+          <td>${distance.toFixed(2)} km</td>
           <td class="medal">${getMedals(name)}</td>
         `;
       });
-    }
-
-    // Function to get the nickname of a participant
-    function getNickname(name) {
-      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
-      for (let row of rows) {
-        if (row.cells[1].textContent === name) {
-          return row.cells[2].textContent;
-        }
-      }
-      return '';
     }
 
     // Function to get the BIB Number of a participant
@@ -704,68 +651,48 @@
       return '';
     }
 
-    // Function to get the contact of a participant
-    function getContact(name) {
-      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+    // Function to filter the ranking table by BIB number and highlight the row
+    function filterRankingTable() {
+      const searchTerm = document.getElementById('bibSearch').value.trim(); // Get the BIB number
+      const rows = document.getElementById('rankingTable').getElementsByTagName('tbody')[0].rows;
+
       for (let row of rows) {
-        if (row.cells[1].textContent === name) {
-          return row.cells[4].textContent;
+        const bibCell = row.cells[2].textContent.trim(); // BIB number is in the 3rd column (index 2)
+
+        if (searchTerm === "" || bibCell === searchTerm) {
+          row.style.display = ""; // Show row
+          if (bibCell === searchTerm) {
+            row.classList.add('highlight'); // Add highlight animation
+          } else {
+            row.classList.remove('highlight'); // Remove highlight animation
+          }
+        } else {
+          row.style.display = "none"; // Hide row
+          row.classList.remove('highlight'); // Remove highlight animation
         }
       }
-      return '';
     }
 
-    // Function to highlight the winner
-    function highlightWinner(name) {
-      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
-      for (let row of rows) {
-        if (row.cells[1].textContent === name) {
-          row.classList.add('winner');
-        }
-      }
-    }
-
-    // Function to update the top 3 participants
-    function updateTop3Participants() {
-      const sortedParticipants = Array.from(totalDistanceMap.entries()).sort((a, b) => b[1] - a[1]);
-      const top3 = sortedParticipants.slice(0, 3);
-
-      document.getElementById('topper1').textContent = `1. ${top3[0] ? top3[0][0] : '-'} - ${top3[0] ? top3[0][1].toFixed(2) : '0'} km`;
-      document.getElementById('topper2').textContent = `2. ${top3[1] ? top3[1][0] : '-'} - ${top3[1] ? top3[1][1].toFixed(2) : '0'} km`;
-      document.getElementById('topper3').textContent = `3. ${top3[2] ? top3[2][0] : '-'} - ${top3[2] ? top3[2][1].toFixed(2) : '0'} km`;
-    }
-
-    // Toggle Winners Table Visibility
-    document.getElementById('winnersButton').addEventListener('click', function() {
-      const winnersTableContainer = document.getElementById('winnersTableContainer');
+    // Toggle Ranking Table Visibility
+    document.getElementById('rankingButton').addEventListener('click', function() {
+      const rankingTableContainer = document.getElementById('rankingTableContainer');
       const logTableContainer = document.querySelector('.table-container');
 
-      if (winnersTableContainer.style.display === 'none') {
-        winnersTableContainer.style.display = 'block';
+      if (rankingTableContainer.style.display === 'none') {
+        rankingTableContainer.style.display = 'block';
         logTableContainer.style.display = 'none';
         this.textContent = 'Show Running Log';
       } else {
-        winnersTableContainer.style.display = 'none';
+        rankingTableContainer.style.display = 'none';
         logTableContainer.style.display = 'block';
-        this.textContent = 'Show Winners';
-      }
-    });
-
-    // Toggle Top Section Visibility
-    document.getElementById('toggleTopSection').addEventListener('click', function() {
-      const topSection = document.getElementById('topSection');
-      if (topSection.style.display === 'none') {
-        topSection.style.display = 'block';
-        this.textContent = 'Hide Top Section';
-      } else {
-        topSection.style.display = 'none';
-        this.textContent = 'Show Top Section';
+        this.textContent = 'Show Ranking';
       }
     });
 
     // Add event listeners for filtering
     document.getElementById('nameFilter').addEventListener('change', filterTable);
     document.getElementById('contactSearch').addEventListener('input', filterTable);
+    document.getElementById('bibSearch').addEventListener('input', filterRankingTable);
   </script>
 </body>
 </html>
