@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Logs</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #564cc0;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .status-pending {
+      color: #ff9800;
+    }
+
+    .status-approved {
+      color: #4caf50;
+    }
+
+    .status-rejected {
+      color: #f44336;
+    }
+  </style>
+</head>
+<body>
+  <h1>Running Logs</h1>
+  <table id="runningLogsTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Contact</th>
+        <th>BIB Number</th>
+        <th>Name</th>
+        <th>Nickname</th>
+        <th>Distance (km)</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data will be inserted here dynamically -->
+    </tbody>
+  </table>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    // Firebase Configuration 2 (Same as in the first file)
+    const firebaseConfig = {
+      apiKey: "AIzaSyClxIK0xiQh4XGZTgYuRHqq5xNT7iIGYjw",
+      authDomain: "runninglog-f16f7.firebaseapp.com",
+      projectId: "runninglog-f16f7",
+      storageBucket: "runninglog-f16f7.appspot.com",
+      messagingSenderId: "143536384226",
+      appId: "1:143536384226:web:d35c56b74cfd62dc06d6bb",
+      measurementId: "G-2Z7W4TFCZ4"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = app.database();
+
+    // Fetch and Display Data
+    function fetchRunningLogs() {
+      const runningLogsRef = database.ref('runningLogs');
+      runningLogsRef.on('value', (snapshot) => {
+        const logs = snapshot.val();
+        const tableBody = document.querySelector('#runningLogsTable tbody');
+        tableBody.innerHTML = ''; // Clear existing rows
+
+        if (logs) {
+          Object.keys(logs).forEach((key) => {
+            const log = logs[key];
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${log.date}</td>
+              <td>${log.contact}</td>
+              <td>${log.bibNumber}</td>
+              <td>${log.name}</td>
+              <td>${log.nickname}</td>
+              <td>${log.distance}</td>
+              <td class="status-${log.status}">${log.status}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } else {
+          tableBody.innerHTML = '<tr><td colspan="7">No data available</td></tr>';
+        }
+      });
+    }
+
+    // Fetch data on page load
+    fetchRunningLogs();
+  </script>
+</body>
+</html>
