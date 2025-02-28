@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Log Filter</title>
+  <style>
+    /* Load Faruma font */
+    @import url('https://fonts.googleapis.com/css2?family=Faruma&display=swap');
+
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url('6184000488555530013.jpg'); /* Add your image URL */
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-image: url(''); /* Your watermark logo */
+      background-size: 100% 100%; /* Make the image fill the entire container */
+      background-repeat: no-repeat;
+      opacity: 0.1; /* Control the opacity of the watermark */
+      width: 100%; /* Ensure it fits the container */
+      height: 100%; /* Ensure it fits the container */
+      pointer-events: none; /* Ensure it doesn't interfere with clicking elements */
+      z-index: 0;
+
+      /* Animation for zoom effect */
+      animation: zoomInOut 10s infinite ease-in-out;
+    }
+
+    /* Zoom-in and zoom-out animation */
+    @keyframes zoomInOut {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @font-face {
+      font-family: 'SameeAvasThaana';
+      src: url(fonts/Samee_Avas_Thaana.ttf);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+      font-family: 'SameeAvasThaana', sans-serif; /* Apply Faruma font */
+    }
+
+    /* Search Bar Styles */
+    #contactSearch {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    /* Name Filter Dropdown Styles */
+    #nameFilter {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    /* Table Styles */
+    .table-container {
+      max-height: 400px; /* Set a fixed height for the table body */
+      overflow-y: auto; /* Enable vertical scrolling */
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    table th {
+      background-color: #f8f9fa; /* Light gray background for header */
+      position: sticky; /* Make the header sticky */
+      top: 0; /* Stick to the top of the container */
+      z-index: 1; /* Ensure the header stays above the body */
+    }
+
+    /* Hide the Contact Column */
+    table th:nth-child(4),
+    table td:nth-child(4) {
+      display: none;
+    }
+
+    button {
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .status-pending {
+      color: red;
+    }
+
+    .status-approved {
+      color: green;
+    }
+
+    /* Total Distance Styles */
+    .total-distance-container {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #cee5d07a; /* Light green background */
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #totalDistance {
+      font-size: 24px;
+      font-weight: bold;
+      color: #595802; /* Dark green color */
+      margin: 10px 0;
+    }
+
+    /* Winner Styles */
+    .winner {
+      background-color: #ffeb3b; /* Highlight color for winners */
+      font-weight: bold;
+    }
+
+    /* Winners Button Styles */
+    .winners-button-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    #winnersButton {
+      background-color: #2196F3; /* Blue color for the button */
+    }
+
+    #winnersButton:hover {
+      background-color: #1e88e5;
+    }
+
+    /* Winners Table Styles */
+    #winnersTableContainer {
+      display: none; /* Initially hidden */
+      margin-top: 20px;
+    }
+
+    /* Medal Styles */
+    .medal {
+      font-size: 1.5em;
+    }
+
+    .bronze {
+      color: #cd7f32; /* Bronze color */
+    }
+
+    .silver {
+      color: #c0c0c0; /* Silver color */
+    }
+
+    .gold {
+      color: #ffd700; /* Gold color */
+    }
+
+    /* Medal Details Section */
+    .medal-details {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    /* Topper Section Styles */
+    .topper-section {
+      margin-top: 20px;
+      padding: 8px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .topper-section h2 {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+
+    .topper-section p {
+      font-size: 1.0em;
+      margin: 5px 0;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      select {
+        font-size: 14px;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 8px;
+      }
+
+      button {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      #totalDistance {
+        font-size: 20px;
+      }
+
+      .medal-details {
+        font-size: 1em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      select {
+        font-size: 12px;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 6px;
+      }
+
+      button {
+        padding: 5px 8px;
+        font-size: 10px;
+      }
+
+      #totalDistance {
+        font-size: 18px;
+      }
+
+      .medal-details {
+        font-size: 0.9em;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      select {
+        font-size: 10px;
+      }
+
+      table {
+        font-size: 10px;
+      }
+
+      th, td {
+        padding: 4px;
+      }
+
+      button {
+        padding: 4px 6px;
+        font-size: 8px;
+      }
+
+      #totalDistance {
+        font-size: 16px;
+      }
+
+      .medal-details {
+        font-size: 0.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> qgol qnar adOr</h1>
+
+    <!-- Search Bar for Contact Number -->
+    <input type="text" id="contactSearch" placeholder="Enter full contact number to search...">
+
+    <!-- Name Filter Dropdown -->
+    <select id="nameFilter">
+      <option value="">All</option>
+      <!-- Dynamic Name Options will be added here -->
+    </select>
+
+    <div class="total-distance-container">
+      <h2>Total Distance</h2>
+      <p id="totalDistance">0 km</p>
+    </div>
+
+    <!-- Topper Section -->
+    <div class="topper-section">
+      <h2>Top 3 </h2>
+      <p id="topper1">1. - 0 km</p>
+      <p id="topper2">2. - 0 km</p>
+      <p id="topper3">3. - 0 km</p>
+    </div>
+
+    <!-- Running Log Section -->
+    <div class="running-log-header">
+      <h2>Running Log</h2>
+      <!-- Medal Details -->
+      <div class="medal-details">
+        🥉 Bronze for 50 km | 🥈 Silver for 75 km | 🥇 Gold for 100 km
+      </div>
+      <div class="winners-button-container">
+        <button id="winnersButton">Show Winners</button>
+      </div>
+    </div>
+    <div class="table-container">
+      <table id="logTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Nickname</th>
+            <th>Contact</th> <!-- Hidden Column -->
+            <th>Distance (km)</th>
+            <th>Status</th>
+            <th>Medals</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will appear here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Winners Section -->
+    <div id="winnersTableContainer">
+      <h2>Winners</h2>
+      <div class="table-container">
+        <table id="winnersTable">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Name</th>
+              <th>Nickname</th>
+              <th>Contact</th> <!-- Hidden Column -->
+              <th>Total Distance (km)</th>
+              <th>Medals</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Winners will appear here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+    import { getDatabase, ref, onChildAdded, update, remove } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyClxIK0xiQh4XGZTgYuRHqq5xNT7iIGYjw",
+      authDomain: "runninglog-f16f7.firebaseapp.com",
+      projectId: "runninglog-f16f7",
+      storageBucket: "runninglog-f16f7.appspot.com",
+      messagingSenderId: "143536384226",
+      appId: "1:143536384226:web:d35c56b74cfd62dc06d6bb",
+      measurementId: "G-2Z7W4TFCZ4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    const nameSet = new Set(); // To store unique names for the filter dropdown
+    const totalDistanceMap = new Map(); // To store total distance for each person
+    const winners = []; // Array to store winners in order of completion
+
+    // Fetch data from Firebase
+    const runningLogRef = ref(database, 'runningLogs');
+    onChildAdded(runningLogRef, function(snapshot) {
+      const data = snapshot.val();
+      addRowToTable(snapshot.key, data);
+      if (data.status === "approved") {
+        updateTotalDistance(data.name, parseFloat(data.distance));
+      }
+      updateNameFilter(data.name); // Update the name filter dropdown
+    });
+
+    // Function to add a row to the table
+    function addRowToTable(key, data) {
+      const table = document.getElementById('logTable').getElementsByTagName('tbody')[0];
+      const row = table.insertRow();
+
+      row.id = `row_${key}`; // Assign a unique ID to the row
+      row.innerHTML = `
+        <td>${data.date}</td>
+        <td>${data.name}</td>
+        <td>${data.nickname}</td>
+        <td>${data.contact}</td> <!-- Hidden Column -->
+        <td>${data.distance}</td>
+        <td class="status-${data.status}">${data.status}</td>
+        <td class="medal">${getMedals(data.name)}</td>
+        <td>
+          ${data.status === "pending" ? 
+            `<button id="approveBtn_${key}" onclick="approveData('${key}')">Approve</button>` : ''}
+          <button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>
+        </td>
+      `;
+    }
+
+    // Function to update the name filter dropdown
+    function updateNameFilter(name) {
+      if (name) {
+        nameSet.add(name); // Add the new name to the set
+      }
+
+      const nameFilter = document.getElementById('nameFilter');
+      nameFilter.innerHTML = `<option value="">All</option>`; // Reset the dropdown
+
+      nameSet.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        nameFilter.appendChild(option);
+      });
+    }
+
+    // Function to filter the table by exact contact number or selected name
+    function filterTable() {
+      const selectedName = document.getElementById('nameFilter').value.toLowerCase();
+      const searchTerm = document.getElementById('contactSearch').value.trim(); // Get the exact contact number
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+      let totalDistance = 0;
+
+      // Show all rows if "All" is selected and no contact number is entered
+      if (selectedName === "" && searchTerm === "") {
+        for (let row of rows) {
+          row.style.display = ""; // Show row
+          if (row.cells[5].textContent === "approved") {
+            totalDistance += parseFloat(row.cells[4].textContent); // Add distance to total
+          }
+        }
+      } else {
+        // Show rows that match the selected name or exact contact number
+        for (let row of rows) {
+          const nameCell = row.cells[1].textContent.toLowerCase(); // Name is in the 2nd column (index 1)
+          const contactCell = row.cells[3].textContent.trim(); // Contact is in the 4th column (index 3)
+
+          const nameMatch = selectedName !== "" && nameCell.includes(selectedName);
+          const contactMatch = searchTerm !== "" && contactCell === searchTerm; // Exact match for contact
+
+          if (nameMatch || contactMatch) {
+            row.style.display = ""; // Show row
+            if (row.cells[5].textContent === "approved") {
+              totalDistance += parseFloat(row.cells[4].textContent); // Add distance to total
+            }
+          } else {
+            row.style.display = "none"; // Hide row
+          }
+        }
+      }
+
+      // Update the total distance display
+      const totalDistanceElement = document.getElementById('totalDistance');
+      totalDistanceElement.textContent = `${totalDistance.toFixed(2)} km`;
+    }
+
+    // Function to approve data when "Approve" is pressed
+    window.approveData = function(key) {
+      const password = prompt("Enter password to approve data:");
+      if (password === "123") {
+        const dataRef = ref(database, 'runningLogs/' + key);
+        update(dataRef, {
+          status: "approved" // Change the status to approved
+        }).then(() => {
+          // Update the UI immediately
+          const row = document.getElementById(`row_${key}`);
+          if (row) {
+            const name = row.cells[1].textContent; // Get the name from the table
+            const distance = parseFloat(row.cells[4].textContent); // Get the distance from the table
+
+            // Update the status in the UI
+            row.cells[5].textContent = "approved";
+            row.cells[5].className = "status-approved";
+
+            // Remove the Approve button
+            row.cells[7].innerHTML = `<button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>`;
+
+            // Update the total distance
+            updateTotalDistance(name, distance);
+          }
+          alert("Data approved successfully!");
+        }).catch(error => {
+          alert("Error approving data: " + error);
+        });
+      } else {
+        alert("Incorrect password! Data not approved.");
+      }
+    };
+
+    // Function to delete data
+    window.deleteData = function(key) {
+      const password = prompt("Enter password to delete data:");
+      if (password === "123") {
+        const dataRef = ref(database, 'runningLogs/' + key);
+        remove(dataRef).then(() => {
+          const row = document.getElementById(`row_${key}`);
+          if (row) {
+            row.remove(); // Remove the row from the table
+          }
+          alert("Data deleted successfully!");
+        }).catch(error => {
+          alert("Error deleting data: " + error);
+        });
+      } else {
+        alert("Incorrect password! Data not deleted.");
+      }
+    };
+
+    // Function to update total distance for each person
+    function updateTotalDistance(name, distance) {
+      if (totalDistanceMap.has(name)) {
+        totalDistanceMap.set(name, totalDistanceMap.get(name) + distance);
+      } else {
+        totalDistanceMap.set(name, distance);
+      }
+
+      // Check if the person has completed 100 km
+      if (totalDistanceMap.get(name) >= 100 && !winners.includes(name)) {
+        winners.push(name); // Add the winner to the array
+        highlightWinner(name);
+        updateWinnersTable(); // Update the winners table
+      }
+
+      // Update the medals for the person
+      updateMedals(name);
+
+      // Update the top 3 participants
+      updateTop3Participants();
+    }
+
+    // Function to update the medals for a person
+    function updateMedals(name) {
+      const totalDistance = totalDistanceMap.get(name) || 0;
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+
+      for (let row of rows) {
+        if (row.cells[1].textContent === name) {
+          row.cells[6].innerHTML = getMedals(name);
+        }
+      }
+    }
+
+    // Function to get the medals for a person
+    function getMedals(name) {
+      const totalDistance = totalDistanceMap.get(name) || 0;
+      let medals = '';
+
+      if (totalDistance >= 100) {
+        medals += '<span class="medal gold">🥇</span>'; // Gold medal
+      }
+      if (totalDistance >= 75) {
+        medals += '<span class="medal silver">🥈</span>'; // Silver medal
+      }
+      if (totalDistance >= 50) {
+        medals += '<span class="medal bronze">🥉</span>'; // Bronze medal
+      }
+
+      return medals;
+    }
+
+    // Function to update the winners table
+    function updateWinnersTable() {
+      const winnersTable = document.getElementById('winnersTable').getElementsByTagName('tbody')[0];
+      winnersTable.innerHTML = ''; // Clear the table
+
+      winners.forEach((name, index) => {
+        const row = winnersTable.insertRow();
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${name}</td>
+          <td>${getNickname(name)}</td>
+          <td>${getContact(name)}</td>
+          <td>${totalDistanceMap.get(name).toFixed(2)} km</td>
+          <td class="medal">${getMedals(name)}</td>
+        `;
+      });
+    }
+
+    // Function to get the nickname of a participant
+    function getNickname(name) {
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+      for (let row of rows) {
+        if (row.cells[1].textContent === name) {
+          return row.cells[2].textContent;
+        }
+      }
+      return '';
+    }
+
+    // Function to get the contact of a participant
+    function getContact(name) {
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+      for (let row of rows) {
+        if (row.cells[1].textContent === name) {
+          return row.cells[3].textContent;
+        }
+      }
+      return '';
+    }
+
+    // Function to highlight the winner
+    function highlightWinner(name) {
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+      for (let row of rows) {
+        if (row.cells[1].textContent === name) {
+          row.classList.add('winner');
+        }
+      }
+    }
+
+    // Function to update the top 3 participants
+    function updateTop3Participants() {
+      const sortedParticipants = Array.from(totalDistanceMap.entries()).sort((a, b) => b[1] - a[1]);
+      const top3 = sortedParticipants.slice(0, 3);
+
+      document.getElementById('topper1').textContent = `1. ${top3[0] ? top3[0][0] : '-'} - ${top3[0] ? top3[0][1].toFixed(2) : '0'} km`;
+      document.getElementById('topper2').textContent = `2. ${top3[1] ? top3[1][0] : '-'} - ${top3[1] ? top3[1][1].toFixed(2) : '0'} km`;
+      document.getElementById('topper3').textContent = `3. ${top3[2] ? top3[2][0] : '-'} - ${top3[2] ? top3[2][1].toFixed(2) : '0'} km`;
+    }
+
+    // Toggle Winners Table Visibility
+    document.getElementById('winnersButton').addEventListener('click', function() {
+      const winnersTableContainer = document.getElementById('winnersTableContainer');
+      const logTableContainer = document.querySelector('.table-container');
+
+      if (winnersTableContainer.style.display === 'none') {
+        winnersTableContainer.style.display = 'block';
+        logTableContainer.style.display = 'none';
+        this.textContent = 'Show Running Log';
+      } else {
+        winnersTableContainer.style.display = 'none';
+        logTableContainer.style.display = 'block';
+        this.textContent = 'Show Winners';
+      }
+    });
+
+    // Add event listeners for filtering
+    document.getElementById('nameFilter').addEventListener('change', filterTable);
+    document.getElementById('contactSearch').addEventListener('input', filterTable);
+  </script>
+</body>
+</html>

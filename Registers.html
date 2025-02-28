@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramazan 100K Running Challenge 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('6184000488555530013.jpg'); /* Add your image URL */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Load Faruma font 
+        @import url('https://fonts.googleapis.com/css2?family=Faruma&display=swap');
+*/
+@font-face {
+    font-family: 'SameeAvasThaana';
+    src: url(fonts/Samee_Avas_Thaana.ttf);
+}
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+            font-family: 'SameeAvasThaana', sans-serif; /* Apply Faruma font */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-image: url('6184000488555530013.jpg'); /* Your watermark logo */
+            background-size: 100% 100%; /* Make the image fill the entire container */
+            background-repeat: no-repeat;
+            opacity: 0.1; /* Control the opacity of the watermark */
+            width: 100%; /* Ensure it fits the container */
+            height: 100%; /* Ensure it fits the container */
+            pointer-events: none; /* Ensure it doesn't interfere with clicking elements */
+            z-index: 0;
+
+            /* Animation for zoom effect */
+            animation: zoomInOut 10s infinite ease-in-out;
+        }
+
+        /* Zoom-in and zoom-out animation */
+        @keyframes zoomInOut {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+        }
+
+        button {
+            width: 100%;
+            padding: 05px;
+            background-color: #5053e6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.7rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
+        }
+
+        button:hover {
+            background-color: #707172;
+        }
+
+        .admin-btn, .show-table-btn {
+            margin-top: 20px;
+            padding: 5px 5px;
+            background-color: #5053e6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .table-container {
+            max-height: 300px; /* Adjust height as needed */
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background-color: #5053e6;
+            color: white;
+            z-index: 2;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #5053e6;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .search-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .search-input {
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .delete-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            width: auto;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #totalDataCount {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        #totalDataCount:hover {
+            color: #5053e6;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> 2025 qnar adOr</h1> <!-- Dhivehi text -->
+
+        <div id="totalDataCount">Total Participants: 0</div>
+
+        <!-- Entry Form -->
+        <form id="runChallengeForm">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" required><br>
+            
+            <label for="nickName">Nick Name:</label>
+            <input type="text" id="nickName" name="nickName" required><br>
+            
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" name="contact" required><br>
+            
+            <button type="submit">raTqsijar</button>
+        </form>
+
+        <!-- Always Visible: Enter Contact to Auto-Fill Form Search Bar -->
+        <div id="autoFillSearchContainer" style="margin-top: 20px;">
+            <input type="text" id="autoFillSearchBar" class="search-input" placeholder="Enter Contact to Auto-Fill Form">
+        </div>
+
+        <!-- Admin Button -->
+        <button class="admin-btn" id="adminBtn">qnimqDew</button>
+
+        <!-- Hidden by Default: Saved Data Table -->
+        <div id="adminSection" style="display: none;">
+            <div class="search-container">
+                <input type="text" id="searchBar" class="search-input" placeholder="Search by Full Name, Nick Name, or Contact">
+            </div>
+
+            <div id="dataTable">
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Nick Name</th>
+                                    <th>Contact</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
+            authDomain: "run-challenge-3cd7b.firebaseapp.com",
+            databaseURL: "https://run-challenge-3cd7b-default-rtdb.firebaseio.com",
+            projectId: "run-challenge-3cd7b",
+            storageBucket: "run-challenge-3cd7b.firebasestorage.app",
+            messagingSenderId: "1009826150691",
+            appId: "1:1009826150691:web:2fe9bed895b701a75f3496",
+            measurementId: "G-TJYBERMRRT"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        document.getElementById("runChallengeForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const fullName = document.getElementById("fullName").value;
+            const nickName = document.getElementById("nickName").value;
+            const contact = document.getElementById("contact").value;
+
+            // Check if contact number already exists
+            database.ref('participants').orderByChild('contact').equalTo(contact).once('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    alert("This contact number has already been registered.");
+                } else {
+                    database.ref('participants/' + fullName).set({ nickName, contact });
+
+                    const newRow = document.createElement('tr');
+                    newRow.id = `row-${fullName}`;
+                    newRow.innerHTML = `
+                        <td>${fullName}</td>
+                        <td>${nickName}</td>
+                        <td>${contact}</td>
+                        <td><button class="delete-btn" data-id="${fullName}" style="display: none;">Delete</button></td>
+                    `;
+                    document.getElementById("dataBody").appendChild(newRow);
+                    alert("Registration successful!");
+                    updateTotalCount();
+                    document.getElementById("runChallengeForm").reset();
+                }
+            });
+        });
+
+        document.getElementById("adminBtn").addEventListener("click", function() {
+            const password = prompt("Enter Admin Password:");
+            if (password === "1234") {
+                // Hide the entry form and show the saved data table
+                document.getElementById("runChallengeForm").style.display = "none";
+                document.getElementById("adminSection").style.display = "block";
+                const deleteBtns = document.querySelectorAll(".delete-btn");
+                deleteBtns.forEach(btn => {
+                    btn.style.display = 'inline-block';
+                });
+            } else {
+                alert("Incorrect password!");
+            }
+        });
+
+        document.getElementById("dataBody").addEventListener("click", function(event) {
+            if (event.target.classList.contains("delete-btn")) {
+                const id = event.target.getAttribute('data-id');
+                database.ref('participants/' + id).remove();
+                document.getElementById(`row-${id}`).remove();
+                updateTotalCount();
+            }
+        });
+
+        document.getElementById("autoFillSearchBar").addEventListener("input", function(event) {
+            const contact = event.target.value;
+            database.ref('participants').orderByChild('contact').equalTo(contact).once('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    snapshot.forEach(function(childSnapshot) {
+                        const data = childSnapshot.val();
+                        document.getElementById("fullName").value = childSnapshot.key;
+                        document.getElementById("nickName").value = data.nickName;
+                        document.getElementById("contact").value = data.contact;
+                    });
+                } else {
+                    document.getElementById("fullName").value = "";
+                    document.getElementById("nickName").value = "";
+                    document.getElementById("contact").value = "";
+                }
+            });
+        });
+
+        window.onload = function() {
+            database.ref('participants').on('value', function(snapshot) {
+                const data = snapshot.val();
+                const dataBody = document.getElementById("dataBody");
+                dataBody.innerHTML = '';
+                for (const fullName in data) {
+                    const newRow = document.createElement('tr');
+                    newRow.id = `row-${fullName}`;
+                    newRow.innerHTML = `
+                        <td>${fullName}</td>
+                        <td>${data[fullName].nickName}</td>
+                        <td>${data[fullName].contact}</td>
+                        <td><button class="delete-btn" data-id="${fullName}" style="display: none;">qTiliD</button></td>
+                    `;
+                    dataBody.appendChild(newRow);
+                }
+                updateTotalCount();
+            });
+        };
+
+        function updateTotalCount() {
+            database.ref('participants').once('value', function(snapshot) {
+                const totalCount = snapshot.numChildren();
+                document.getElementById("totalDataCount").textContent = `Total Participants: ${totalCount}`;
+            });
+        }
+
+        document.getElementById("searchBar").addEventListener("input", function(event) {
+            const query = event.target.value.toLowerCase();
+            const rows = document.querySelectorAll("#dataBody tr");
+            rows.forEach(row => {
+                const fullName = row.cells[0].textContent.toLowerCase();
+                const nickName = row.cells[1].textContent.toLowerCase();
+                const contact = row.cells[2].textContent.toLowerCase();
+                if (fullName.includes(query) || nickName.includes(query) || contact.includes(query)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

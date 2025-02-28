@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gallery with Admin Controls</title>
+    <style>
+        /* Body styling with background image */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://via.placeholder.com/1920x1080'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Top section styling */
+        .top-section {
+            position: fixed; /* Fixes the position at the top */
+            top: 0; /* Aligns it to the top of the viewport */
+            left: 0; /* Aligns it to the left of the viewport */
+            width: 100%; /* Ensures it spans the full width of the viewport */
+            background-color: white; /* Optional: Adds a background color to make it stand out */
+            z-index: 1000; /* Ensures it stays on top of other content */
+            padding: 10px; /* Optional: Adds some padding for better spacing */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+        }
+
+        /* Search bar styling */
+        #searchBar {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+        }
+
+        /* Gallery styling */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            width: 90%;
+            padding: 10px;
+            margin-top: 150px; /* Adjusted to account for the fixed top section */
+        }
+
+        .gallery-item {
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 150px; /* Adjusted for mobile */
+            object-fit: cover;
+        }
+
+        .gallery-item p {
+            padding: 10px;
+            font-size: 0.9rem; /* Smaller font size for mobile */
+            color: #555;
+            text-align: center;
+        }
+
+        /* Admin button styling */
+        .admin-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem; /* Smaller font size for mobile */
+        }
+
+        /* Action buttons styling */
+        .action-buttons {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 5px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-buttons button {
+            display: block;
+            width: 100%;
+            padding: 6px 10px;
+            margin-bottom: 5px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem; /* Smaller font size for mobile */
+        }
+
+        .action-buttons button:hover {
+            background-color: #cc0000;
+        }
+
+        /* Modal overlay styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-height: 90%;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .close-button:hover {
+            background-color: #cc0000;
+        }
+
+        /* Combined counter styling */
+        .image-counter {
+            font-size: 1rem; /* Smaller font size for mobile */
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+</head>
+<body>
+    <div class="top-section">
+        <div class="image-counter" id="imageCounter">Total Images: 0</div>
+        <input type="text" id="searchBar" placeholder="Search by contact number...">
+    </div>
+    <div class="gallery" id="gallery"></div>
+
+    <!-- Modal overlay for image preview -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Preview">
+            <button class="close-button" id="closeButton">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVFr7OiCxBG5MVQL3e6BJObqU95Q6MBSc",
+            authDomain: "upload-5a391.firebaseapp.com",
+            databaseURL: "https://upload-5a391-default-rtdb.firebaseio.com",
+            projectId: "upload-5a391",
+            storageBucket: "upload-5a391.firebasestorage.app",
+            messagingSenderId: "368816917135",
+            appId: "1:368816917135:web:ed5873e1a3c37e12da3efa",
+            measurementId: "G-Z3TRXZP3Q6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Fetch saved data from Firebase
+        database.ref('savedData').on('value', (snapshot) => {
+            const savedData = snapshot.val();
+            const gallery = document.getElementById('gallery');
+            const imageCounter = document.getElementById('imageCounter');
+            gallery.innerHTML = ''; // Clear previous content
+
+            if (savedData) {
+                let totalCount = 0; // Counter for total images
+
+                Object.keys(savedData).forEach((key) => {
+                    const data = savedData[key];
+                    const galleryItem = document.createElement('div');
+                    galleryItem.classList.add('gallery-item');
+                    galleryItem.dataset.contactNumber = data.contactNumber; // Store contact number in dataset
+
+                    // Display image
+                    const image = document.createElement('img');
+                    image.src = data.image;
+                    galleryItem.appendChild(image);
+
+                    // Display text
+                    const text = document.createElement('p');
+                    text.textContent = data.text;
+                    galleryItem.appendChild(text);
+
+                    // Add Admin button
+                    const adminButton = document.createElement('button');
+                    adminButton.classList.add('admin-button');
+                    adminButton.textContent = 'Admin';
+                    galleryItem.appendChild(adminButton);
+
+                    // Add action buttons container
+                    const actionButtons = document.createElement('div');
+                    actionButtons.classList.add('action-buttons');
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    actionButtons.appendChild(deleteButton);
+                    galleryItem.appendChild(actionButtons);
+
+                    // Handle Admin button click
+                    adminButton.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent gallery item click
+                        const password = prompt('Enter admin password:');
+                        if (password === '123') {
+                            actionButtons.style.display = 'block'; // Show action buttons
+                        } else {
+                            alert('Incorrect password!');
+                        }
+                    });
+
+                    // Handle Delete button click
+                    deleteButton.addEventListener('click', () => {
+                        if (confirm('Are you sure you want to delete this item?')) {
+                            database.ref('savedData/' + key).remove()
+                                .then(() => alert('Item deleted successfully!'))
+                                .catch((error) => alert('Error deleting item: ' + error.message));
+                        }
+                    });
+
+                    // Handle gallery item click
+                    galleryItem.addEventListener('click', () => {
+                        const modalOverlay = document.getElementById('modalOverlay');
+                        const modalImage = document.getElementById('modalImage');
+                        modalImage.src = data.image;
+                        modalOverlay.classList.add('active');
+                    });
+
+                    gallery.appendChild(galleryItem);
+                    totalCount++; // Increment the total image count
+                });
+
+                // Update the image counter
+                imageCounter.textContent = `Total Images: ${totalCount}`;
+
+                // Handle search bar input
+                const searchBar = document.getElementById('searchBar');
+                searchBar.addEventListener('input', () => {
+                    const searchTerm = searchBar.value.trim().toLowerCase();
+                    const galleryItems = document.querySelectorAll('.gallery-item');
+                    let filteredCount = 0; // Counter for filtered images
+
+                    galleryItems.forEach((item) => {
+                        const contactNumber = item.dataset.contactNumber.toLowerCase();
+                        if (contactNumber.includes(searchTerm)) {
+                            item.style.display = 'block';
+                            filteredCount++; // Increment counter for filtered images
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    // Update the image counter
+                    imageCounter.textContent = `Total Images: ${filteredCount}`;
+                });
+            } else {
+                gallery.innerHTML = '<p>No data saved yet.</p>';
+                imageCounter.textContent = 'Total Images: 0';
+            }
+        });
+
+        // Close modal functionality
+        const modalOverlay = document.getElementById('modalOverlay');
+        const closeButton = document.getElementById('closeButton');
+
+        closeButton.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

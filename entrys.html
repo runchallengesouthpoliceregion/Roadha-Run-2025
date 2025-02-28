@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Running Entry</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url('6184000488555530013.jpg'); /* Add your image URL */
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-image: url(''); /* Your watermark logo */
+      background-size: 100% 100%; /* Make the image fill the entire container */
+      background-repeat: no-repeat;
+      opacity: 0.1; /* Control the opacity of the watermark */
+      width: 100%; /* Ensure it fits the container */
+      height: 100%; /* Ensure it fits the container */
+      pointer-events: none; /* Ensure it doesn't interfere with clicking elements */
+      z-index: 0;
+
+      /* Animation for zoom effect */
+      animation: zoomInOut 10s infinite ease-in-out;
+    }
+
+    /* Zoom-in and zoom-out animation */
+    @keyframes zoomInOut {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 450px;
+      padding: 30px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    @font-face {
+      font-family: 'SameeAvasThaana';
+      src: url(fonts/Samee_Avas_Thaana.ttf);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+      font-family: 'SameeAvasThaana', sans-serif; /* Apply Faruma font */
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="tel"] {
+      padding: 10px; /* Adjusted for mobile */
+      font-size: 16px; /* Adjusted for mobile */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #564cc0;
+      color: white;
+      border: none;
+      padding: 12px 20px; /* Adjusted for mobile */
+      font-size: 16px; /* Adjusted for mobile */
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%; /* Full width for mobile */
+    }
+
+    button:hover {
+      background-color: #343734;
+    }
+
+    /* Media query for smaller screens */
+    @media (max-width: 480px) {
+      .container {
+        width: 95%; /* Further adjustment for very small screens */
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 20px; /* Smaller font for very small screens */
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="date"],
+      input[type="tel"] {
+        font-size: 14px; /* Smaller font for very small screens */
+      }
+
+      button {
+        padding: 10px 15px; /* Smaller padding for very small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>qnar adOr</h1>
+    <form id="runningForm">
+      <div class="form-group">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" required>
+      </div>
+      <div class="form-group">
+        <label for="contact">Contact:</label>
+        <input type="tel" id="contact" placeholder="Enter contact to auto-fill" required>
+      </div>
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+      </div>
+      <div class="form-group">
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" placeholder="Enter your nickname" required>
+      </div>
+      <div class="form-group">
+        <label for="distance">Running Distance (km):</label>
+        <input type="number" id="distance" placeholder="Enter distance" step="0.01" required>
+      </div>
+      <button type="submit">Add</button>
+    </form>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    // Firebase Configuration 1
+    const firebaseConfig1 = {
+      apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
+      authDomain: "run-challenge-3cd7b.firebaseapp.com",
+      databaseURL: "https://run-challenge-3cd7b-default-rtdb.firebaseio.com",
+      projectId: "run-challenge-3cd7b",
+      storageBucket: "run-challenge-3cd7b.firebasestorage.app",
+      messagingSenderId: "1009826150691",
+      appId: "1:1009826150691:web:2fe9bed895b701a75f3496",
+      measurementId: "G-TJYBERMRRT"
+    };
+
+    // Firebase Configuration 2
+    const firebaseConfig2 = {
+      apiKey: "AIzaSyClxIK0xiQh4XGZTgYuRHqq5xNT7iIGYjw",
+      authDomain: "runninglog-f16f7.firebaseapp.com",
+      projectId: "runninglog-f16f7",
+      storageBucket: "runninglog-f16f7.appspot.com",
+      messagingSenderId: "143536384226",
+      appId: "1:143536384226:web:d35c56b74cfd62dc06d6bb",
+      measurementId: "G-2Z7W4TFCZ4"
+    };
+
+    // Initialize Firebase App 1
+    const app1 = firebase.initializeApp(firebaseConfig1, "app1");
+    const database1 = app1.database();
+
+    // Initialize Firebase App 2
+    const app2 = firebase.initializeApp(firebaseConfig2, "app2");
+    const database2 = app2.database();
+
+    // Auto-fill Name and Nickname based on Contact (using App 1)
+    document.getElementById("contact").addEventListener("input", function(event) {
+      const contact = event.target.value;
+      database1.ref('participants').orderByChild('contact').equalTo(contact).once('value', function(snapshot) {
+        if (snapshot.exists()) {
+          snapshot.forEach(function(childSnapshot) {
+            const data = childSnapshot.val();
+            document.getElementById("name").value = childSnapshot.key; // Full Name
+            document.getElementById("nickname").value = data.nickName; // Nickname
+          });
+        } else {
+          document.getElementById("name").value = "";
+          document.getElementById("nickname").value = "";
+        }
+      });
+    });
+
+    // Handle form submission (using App 2)
+    document.getElementById('runningForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const date = document.getElementById('date').value;
+      const contact = document.getElementById('contact').value;
+      const name = document.getElementById('name').value;
+      const nickname = document.getElementById('nickname').value;
+      const distance = parseFloat(document.getElementById('distance').value); // Parse as float
+
+      if (date && contact && name && nickname && !isNaN(distance)) {
+        // Save data to Firebase (using App 2)
+        const runningLogRef = database2.ref('runningLogs');
+        const newEntry = runningLogRef.push();
+        newEntry.set({
+          date: new Date(date).toLocaleDateString(), // Only date, no time
+          contact: contact, // Save contact number
+          name: name,
+          nickname: nickname,
+          distance: distance,
+          status: "pending" // Status added as "pending"
+        });
+
+        // Clear form fields
+        document.getElementById('runningForm').reset();
+        alert("Data saved successfully!");
+      } else {
+        alert("Please fill in all fields correctly.");
+      }
+    });
+  </script>
+</body>
+</html>

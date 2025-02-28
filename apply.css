@@ -1,0 +1,190 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('WhatsApp Image 2025-02-20 at 21.37.12.jpeg'); /* Add your image URL */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Load Faruma font */
+@import url('https://fonts.googleapis.com/css2?family=Faruma&display=swap');
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+    font-family: 'Faruma', sans-serif; /* Apply Faruma font */
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url('WhatsApp Image 2025-02-20 at 21.37.12.jpeg'); /* Your watermark logo */
+    background-size: 100% 100%; /* Make the image fill the entire container */
+    background-repeat: no-repeat;
+    opacity: 0.2; /* Control the opacity of the watermark */
+    width: 100%; /* Ensure it fits the container */
+    height: 100%; /* Ensure it fits the container */
+    pointer-events: none; /* Ensure it doesn't interfere with clicking elements */
+    z-index: 0;
+
+    /* Animation for zoom effect */
+    animation: zoomInOut 10s infinite ease-in-out;
+}
+
+/* Zoom-in and zoom-out animation */
+@keyframes zoomInOut {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}
+
+label {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s;
+}
+
+input:focus {
+    border-color: #007BFF;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.admin-btn, .show-table-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #5053e6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.table-container {
+    max-height: 300px;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid #ccc;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background-color: #5053e6;
+    color: white;
+    z-index: 2;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    font-size: 1rem;
+}
+
+th {
+    background-color: #5053e6;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+.search-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.search-input {
+    padding: 10px;
+    width: 80%;
+    max-width: 400px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.delete-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    width: auto;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}

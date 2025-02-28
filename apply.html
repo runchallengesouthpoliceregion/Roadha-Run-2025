@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramazan 100K Running Challenge 2025</title>
+    <link rel="stylesheet" href="apply.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ރޯދަ ރަން 2025</h1> <!-- Dhivehi text -->
+
+        <div id="totalDataCount">Total Participants: 0</div>
+
+        <form id="runChallengeForm">
+            <label for="id">ID:</label>
+            <input type="text" id="id" name="id" required><br>
+            
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+            
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" name="contact" required><br>
+            
+            <button type="submit">Register</button>
+        </form>
+
+        <button class="admin-btn" id="adminBtn">Admin</button>
+        <button class="show-table-btn" id="showTableBtn">Show Data</button>
+
+        <div class="search-container">
+            <input type="text" id="searchBar" class="search-input" placeholder="Search by ID, Name, or Contact">
+        </div>
+
+        <div id="dataTable" style="display: none;">
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
+            authDomain: "run-challenge-3cd7b.firebaseapp.com",
+            databaseURL: "https://run-challenge-3cd7b-default-rtdb.firebaseio.com",
+            projectId: "run-challenge-3cd7b",
+            storageBucket: "run-challenge-3cd7b.firebasestorage.app",
+            messagingSenderId: "1009826150691",
+            appId: "1:1009826150691:web:2fe9bed895b701a75f3496",
+            measurementId: "G-TJYBERMRRT"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        document.getElementById("runChallengeForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById("id").value;
+            const name = document.getElementById("name").value;
+            const contact = document.getElementById("contact").value;
+
+            database.ref('participants/' + id).once('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    alert("This ID has already been registered.");
+                } else {
+                    database.ref('participants/' + id).set({ name, contact });
+
+                    const newRow = document.createElement('tr');
+                    newRow.id = `row-${id}`;
+                    newRow.innerHTML = `
+                        <td>${id}</td>
+                        <td>${name}</td>
+                        <td>${contact}</td>
+                        <td><button class="delete-btn" data-id="${id}" style="display: none;">Delete</button></td>
+                    `;
+                    document.getElementById("dataBody").appendChild(newRow);
+                    alert("Registration successful!");
+                    updateTotalCount();
+                    document.getElementById("runChallengeForm").reset();
+                }
+            });
+        });
+
+        document.getElementById("adminBtn").addEventListener("click", function() {
+            const password = prompt("Enter Admin Password:");
+            if (password === "1234") {
+                const deleteBtns = document.querySelectorAll(".delete-btn");
+                deleteBtns.forEach(btn => {
+                    btn.style.display = 'inline-block';
+                });
+            } else {
+                alert("Incorrect password!");
+            }
+        });
+
+        document.getElementById("showTableBtn").addEventListener("click", function() {
+            const table = document.getElementById("dataTable");
+            const form = document.getElementById("runChallengeForm");
+            const adminBtn = document.getElementById("adminBtn");
+            const searchBar = document.querySelector(".search-container");
+
+            if (table.style.display === "none" || table.style.display === "") {
+                table.style.display = "block";
+                adminBtn.style.display = "block";
+                searchBar.style.display = "block";
+                form.style.display = "none";
+            } else {
+                table.style.display = "none";
+                adminBtn.style.display = "none";
+                searchBar.style.display = "none";
+                form.style.display = "block";
+            }
+        });
+
+        document.getElementById("dataBody").addEventListener("click", function(event) {
+            if (event.target.classList.contains("delete-btn")) {
+                const id = event.target.getAttribute('data-id');
+                database.ref('participants/' + id).remove();
+                document.getElementById(`row-${id}`).remove();
+                updateTotalCount();
+            }
+        });
+
+        window.onload = function() {
+            database.ref('participants').on('value', function(snapshot) {
+                const data = snapshot.val();
+                const dataBody = document.getElementById("dataBody");
+                dataBody.innerHTML = '';
+                for (const id in data) {
+                    const newRow = document.createElement('tr');
+                    newRow.id = `row-${id}`;
+                    newRow.innerHTML = `
+                        <td>${id}</td>
+                        <td>${data[id].name}</td>
+                        <td>${data[id].contact}</td>
+                        <td><button class="delete-btn" data-id="${id}" style="display: none;">Delete</button></td>
+                    `;
+                    dataBody.appendChild(newRow);
+                }
+                updateTotalCount();
+            });
+        };
+
+        function updateTotalCount() {
+            database.ref('participants').once('value', function(snapshot) {
+                const totalCount = snapshot.numChildren();
+                document.getElementById("totalDataCount").textContent = `Total Participants: ${totalCount}`;
+            });
+        }
+
+        document.getElementById("searchBar").addEventListener("input", function(event) {
+            const query = event.target.value.toLowerCase();
+            const rows = document.querySelectorAll("#dataBody tr");
+            rows.forEach(row => {
+                const id = row.cells[0].textContent.toLowerCase();
+                const name = row.cells[1].textContent.toLowerCase();
+                const contact = row.cells[2].textContent.toLowerCase();
+                if (id.includes(query) || name.includes(query) || contact.includes(query)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
