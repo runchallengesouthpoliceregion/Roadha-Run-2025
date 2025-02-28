@@ -87,21 +87,21 @@
 
         /* Screenshot button styling */
         .test-button {
-    padding: 10px 20px; /* Match padding of other buttons */
-    font-size: 0.7rem; /* Match font size of other buttons */
-    background-color: #2c3e50; /* Dark blue/grey color */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: absolute; /* Position absolutely */
-    top: 180px; /* Position below the logo */
-    right: 20px; /* Position on the right side */
-    z-index: 1; /* Ensure it's above other elements */
-    font-family: 'SameeAvasThaana', sans-serif; /* Apply custom font */
-}
+            padding: 10px 20px; /* Match padding of other buttons */
+            font-size: 0.7rem; /* Match font size of other buttons */
+            background-color: #2c3e50; /* Dark blue/grey color */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: absolute; /* Position absolutely */
+            top: 180px; /* Position below the logo */
+            right: 20px; /* Position on the right side */
+            z-index: 1; /* Ensure it's above other elements */
+            font-family: 'SameeAvasThaana', sans-serif; /* Apply custom font */
+        }
 
         .test-button:hover {
             background-color: #34495e; /* Slightly lighter dark blue/grey on hover */
@@ -161,9 +161,126 @@
             color: #333;
             font-family: 'SameeAvasThaana', sans-serif; /* Apply custom font */
         }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-image: url('LOGO JERSY.png'); /* Replace with your image path */
+            background-size: cover; /* Ensures the image covers the entire div */
+            background-position: center; /* Centers the image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            position: fixed;
+            top: 0;
+            left: -250px; /* Hide sidebar by default */
+            transition: left 0.3s ease;
+            z-index: 1000;
+            opacity: 0.9; /* Adjust opacity (0.0 to 1.0) */
+            animation: zoomBackground 10s infinite alternate; /* Zoom in and out animation */
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for better text visibility */
+            z-index: -1;
+        }
+
+        /* Zoom in and out animation */
+        @keyframes zoomBackground {
+            0% {
+                background-size: 500% auto; /* Start with normal size */
+            }
+            100% {
+                background-size: 200% auto; /* Zoom in to 120% */
+            }
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            padding-top: 60px; /* Space for the close button */
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #564cc0;
+        }
+
+        /* Close button styling */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #564cc0;
+        }
+
+        /* Open button styling */
+        .open-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #564cc0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .open-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Show sidebar when active */
+        .sidebar.active {
+            left: 0;
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-btn" id="closeBtn">×</button>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Open Sidebar Button -->
+    <button class="open-btn" id="openBtn">☰</button>
+
     <div class="container">
         <!-- Logo on the right side -->
         <img src="LOGO JERSY.png" alt="Logo" class="logo" id="logo">
@@ -288,6 +405,21 @@
 
             // Load the screenshot page
             loadContent('images.html');
+        });
+
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const openBtn = document.getElementById('openBtn');
+        const closeBtn = document.getElementById('closeBtn');
+
+        // Open sidebar
+        openBtn.addEventListener('click', function() {
+            sidebar.classList.add('active');
+        });
+
+        // Close sidebar
+        closeBtn.addEventListener('click', function() {
+            sidebar.classList.remove('active');
         });
     </script>
 </body>
