@@ -149,6 +149,10 @@
         <input type="tel" id="contact" placeholder="Enter contact to auto-fill" required>
       </div>
       <div class="form-group">
+        <label for="bibNumber">BIB Number:</label>
+        <input type="text" id="bibNumber" placeholder="BIB Number" readonly>
+      </div>
+      <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" id="name" placeholder="Enter your name" required>
       </div>
@@ -199,7 +203,7 @@
     const app2 = firebase.initializeApp(firebaseConfig2, "app2");
     const database2 = app2.database();
 
-    // Auto-fill Name and Nickname based on Contact (using App 1)
+    // Auto-fill Name, Nickname, and BIB Number based on Contact (using App 1)
     document.getElementById("contact").addEventListener("input", function(event) {
       const contact = event.target.value;
       database1.ref('participants').orderByChild('contact').equalTo(contact).once('value', function(snapshot) {
@@ -208,10 +212,12 @@
             const data = childSnapshot.val();
             document.getElementById("name").value = childSnapshot.key; // Full Name
             document.getElementById("nickname").value = data.nickName; // Nickname
+            document.getElementById("bibNumber").value = data.bibNumber; // BIB Number
           });
         } else {
           document.getElementById("name").value = "";
           document.getElementById("nickname").value = "";
+          document.getElementById("bibNumber").value = "";
         }
       });
     });
@@ -222,17 +228,19 @@
 
       const date = document.getElementById('date').value;
       const contact = document.getElementById('contact').value;
+      const bibNumber = document.getElementById('bibNumber').value;
       const name = document.getElementById('name').value;
       const nickname = document.getElementById('nickname').value;
       const distance = parseFloat(document.getElementById('distance').value); // Parse as float
 
-      if (date && contact && name && nickname && !isNaN(distance)) {
+      if (date && contact && bibNumber && name && nickname && !isNaN(distance)) {
         // Save data to Firebase (using App 2)
         const runningLogRef = database2.ref('runningLogs');
         const newEntry = runningLogRef.push();
         newEntry.set({
           date: new Date(date).toLocaleDateString(), // Only date, no time
           contact: contact, // Save contact number
+          bibNumber: bibNumber, // Save BIB Number
           name: name,
           nickname: nickname,
           distance: distance,
