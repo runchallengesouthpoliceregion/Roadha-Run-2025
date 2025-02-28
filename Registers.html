@@ -391,6 +391,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
@@ -474,14 +475,10 @@
         let pressTimer;
         const bibContainer = document.getElementById("bibContainer");
 
+        // Mouse events for desktop
         bibContainer.addEventListener("mousedown", function() {
             pressTimer = setTimeout(() => {
-                html2canvas(bibContainer).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'digital-bib.png';
-                    link.href = canvas.toDataURL();
-                    link.click();
-                });
+                saveBibAsImage();
             }, 1000); // 1 second hold
         });
 
@@ -492,6 +489,32 @@
         bibContainer.addEventListener("mouseleave", function() {
             clearTimeout(pressTimer);
         });
+
+        // Touch events for mobile
+        bibContainer.addEventListener("touchstart", function(event) {
+            event.preventDefault(); // Prevent default touch behavior
+            pressTimer = setTimeout(() => {
+                saveBibAsImage();
+            }, 1000); // 1 second hold
+        });
+
+        bibContainer.addEventListener("touchend", function() {
+            clearTimeout(pressTimer);
+        });
+
+        bibContainer.addEventListener("touchcancel", function() {
+            clearTimeout(pressTimer);
+        });
+
+        // Function to save the bib as an image
+        function saveBibAsImage() {
+            html2canvas(bibContainer).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'digital-bib.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
 
         // Admin and other functionalities remain the same
         document.getElementById("adminBtn").addEventListener("click", function() {
@@ -585,6 +608,5 @@
             });
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
