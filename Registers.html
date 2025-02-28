@@ -205,35 +205,35 @@
         }
 
         .bib-container {
-    display: none;
-    margin-top: 15px;
-    padding: 4px;
-    background-color: #343247; /* Fallback background color */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(50, 49, 49, 0.1);
-    text-align: center;
-    position: relative;
-    overflow: hidden; /* Ensure the pseudo-element doesn't overflow */
-}
+            display: none;
+            margin-top: 15px;
+            padding: 4px;
+            background-color: #343247; /* Fallback background color */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(50, 49, 49, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden; /* Ensure the pseudo-element doesn't overflow */
+        }
 
-.bib-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('LOGO JERSY.png'); /* Add your background image URL */
-    background-size: cover;
-    background-position: center;
-    opacity: 0.4; /* Set opacity for the background image */
-    z-index: 1; /* Place it behind the content */
-}
+        .bib-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('LOGO JERSY.png'); /* Add your background image URL */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4; /* Set opacity for the background image */
+            z-index: 1; /* Place it behind the content */
+        }
 
-.bib-container > * {
-    position: relative;
-    z-index: 2; /* Ensure content is above the background image */
-}
+        .bib-container > * {
+            position: relative;
+            z-index: 2; /* Ensure content is above the background image */
+        }
 
         .bib-header {
             font-size: 1.1rem;
@@ -273,6 +273,26 @@
         .bib-logos img {
             width: 50px;
             height: 50px;
+        }
+
+        /* Broken Blast Animation */
+        @keyframes brokenBlast {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5) rotate(45deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(0) rotate(90deg);
+                opacity: 0;
+            }
+        }
+
+        .broken-blast-animation {
+            animation: brokenBlast 1s ease-in-out forwards;
         }
     </style>
 </head>
@@ -410,15 +430,45 @@
             document.getElementById("dataBody").appendChild(newRow);
             alert("Registration successful!");
 
-            // Display digital bib
+            // Display digital bib with broken blast animation
             document.getElementById("bibNumber").textContent = `${bibNumber}`;
             document.getElementById("bibNickname").textContent = nickName;
             document.getElementById("bibContainer").style.display = "block";
+            document.getElementById("bibContainer").classList.add("broken-blast-animation");
+
+            // Remove animation after it completes
+            setTimeout(() => {
+                document.getElementById("bibContainer").classList.remove("broken-blast-animation");
+            }, 1000);
 
             updateTotalCount();
             document.getElementById("runChallengeForm").reset();
         });
 
+        // Press-and-hold to save digital bib
+        let pressTimer;
+        const bibContainer = document.getElementById("bibContainer");
+
+        bibContainer.addEventListener("mousedown", function() {
+            pressTimer = setTimeout(() => {
+                html2canvas(bibContainer).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'digital-bib.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                });
+            }, 1000); // 1 second hold
+        });
+
+        bibContainer.addEventListener("mouseup", function() {
+            clearTimeout(pressTimer);
+        });
+
+        bibContainer.addEventListener("mouseleave", function() {
+            clearTimeout(pressTimer);
+        });
+
+        // Admin and other functionalities remain the same
         document.getElementById("adminBtn").addEventListener("click", function() {
             const password = prompt("Enter Admin Password:");
             if (password === "1234") {
@@ -510,5 +560,6 @@
             });
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
