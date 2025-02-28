@@ -132,12 +132,6 @@
       z-index: 1; /* Ensure the header stays above the body */
     }
 
-    /* Hide the Contact Column */
-    table th:nth-child(4),
-    table td:nth-child(4) {
-      display: none;
-    }
-
     button {
       padding: 8px 12px;
       font-size: 14px;
@@ -404,7 +398,8 @@
             <th>Date</th>
             <th>Name</th>
             <th>Nickname</th>
-            <th>Contact</th> <!-- Hidden Column -->
+            <th>BIB Number</th>
+            <th style="display: none;">Contact</th> <!-- Hidden Column -->
             <th>Distance (km)</th>
             <th>Status</th>
             <th>Medals</th>
@@ -427,7 +422,8 @@
               <th>Position</th>
               <th>Name</th>
               <th>Nickname</th>
-              <th>Contact</th> <!-- Hidden Column -->
+              <th>BIB Number</th>
+              <th style="display: none;">Contact</th> <!-- Hidden Column -->
               <th>Total Distance (km)</th>
               <th>Medals</th>
             </tr>
@@ -485,7 +481,8 @@
         <td>${data.date}</td>
         <td>${data.name}</td>
         <td>${data.nickname}</td>
-        <td>${data.contact}</td> <!-- Hidden Column -->
+        <td>${data.bibNumber}</td> <!-- BIB Number Column -->
+        <td style="display: none;">${data.contact}</td> <!-- Hidden Column -->
         <td>${data.distance}</td>
         <td class="status-${data.status}">${data.status}</td>
         <td class="medal">${getMedals(data.name)}</td>
@@ -525,23 +522,23 @@
       if (selectedName === "" && searchTerm === "") {
         for (let row of rows) {
           row.style.display = ""; // Show row
-          if (row.cells[5].textContent === "approved") {
-            totalDistance += parseFloat(row.cells[4].textContent); // Add distance to total
+          if (row.cells[6].textContent === "approved") {
+            totalDistance += parseFloat(row.cells[5].textContent); // Add distance to total
           }
         }
       } else {
         // Show rows that match the selected name or exact contact number
         for (let row of rows) {
           const nameCell = row.cells[1].textContent.toLowerCase(); // Name is in the 2nd column (index 1)
-          const contactCell = row.cells[3].textContent.trim(); // Contact is in the 4th column (index 3)
+          const contactCell = row.cells[4].textContent.trim(); // Contact is in the 5th column (index 4)
 
           const nameMatch = selectedName !== "" && nameCell.includes(selectedName);
           const contactMatch = searchTerm !== "" && contactCell === searchTerm; // Exact match for contact
 
           if (nameMatch || contactMatch) {
             row.style.display = ""; // Show row
-            if (row.cells[5].textContent === "approved") {
-              totalDistance += parseFloat(row.cells[4].textContent); // Add distance to total
+            if (row.cells[6].textContent === "approved") {
+              totalDistance += parseFloat(row.cells[5].textContent); // Add distance to total
             }
           } else {
             row.style.display = "none"; // Hide row
@@ -566,14 +563,14 @@
           const row = document.getElementById(`row_${key}`);
           if (row) {
             const name = row.cells[1].textContent; // Get the name from the table
-            const distance = parseFloat(row.cells[4].textContent); // Get the distance from the table
+            const distance = parseFloat(row.cells[5].textContent); // Get the distance from the table
 
             // Update the status in the UI
-            row.cells[5].textContent = "approved";
-            row.cells[5].className = "status-approved";
+            row.cells[6].textContent = "approved";
+            row.cells[6].className = "status-approved";
 
             // Remove the Approve button
-            row.cells[7].innerHTML = `<button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>`;
+            row.cells[8].innerHTML = `<button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>`;
 
             // Update the total distance
             updateTotalDistance(name, distance);
@@ -635,7 +632,7 @@
 
       for (let row of rows) {
         if (row.cells[1].textContent === name) {
-          row.cells[6].innerHTML = getMedals(name);
+          row.cells[7].innerHTML = getMedals(name);
         }
       }
     }
@@ -669,7 +666,8 @@
           <td>${index + 1}</td>
           <td>${name}</td>
           <td>${getNickname(name)}</td>
-          <td>${getContact(name)}</td>
+          <td>${getBibNumber(name)}</td> <!-- BIB Number Column -->
+          <td style="display: none;">${getContact(name)}</td>
           <td>${totalDistanceMap.get(name).toFixed(2)} km</td>
           <td class="medal">${getMedals(name)}</td>
         `;
@@ -687,12 +685,23 @@
       return '';
     }
 
+    // Function to get the BIB Number of a participant
+    function getBibNumber(name) {
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+      for (let row of rows) {
+        if (row.cells[1].textContent === name) {
+          return row.cells[3].textContent;
+        }
+      }
+      return '';
+    }
+
     // Function to get the contact of a participant
     function getContact(name) {
       const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
       for (let row of rows) {
         if (row.cells[1].textContent === name) {
-          return row.cells[3].textContent;
+          return row.cells[4].textContent;
         }
       }
       return '';
