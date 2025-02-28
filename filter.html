@@ -352,32 +352,40 @@
         font-size: 0.8em;
       }
     }
+
+    /* Toggle Button for Top Section */
+    #toggleTopSection {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1> qgol qnar adOr</h1>
+    <button id="toggleTopSection">Show Top Section</button>
+    <div id="topSection">
+      <h1> qgol qnar adOr</h1>
 
-    <!-- Search Bar for Contact Number -->
-    <input type="text" id="contactSearch" placeholder="Enter full contact number to search...">
+      <!-- Search Bar for Contact Number -->
+      <input type="text" id="contactSearch" placeholder="Enter full contact number to search...">
 
-    <!-- Name Filter Dropdown -->
-    <select id="nameFilter">
-      <option value="">All</option>
-      <!-- Dynamic Name Options will be added here -->
-    </select>
+      <!-- Name Filter Dropdown -->
+      <select id="nameFilter">
+        <option value="">All</option>
+        <!-- Dynamic Name Options will be added here -->
+      </select>
 
-    <div class="total-distance-container">
-      <h2>Total Distance</h2>
-      <p id="totalDistance">0 km</p>
-    </div>
+      <div class="total-distance-container">
+        <h2>Total Distance</h2>
+        <p id="totalDistance">0 km</p>
+      </div>
 
-    <!-- Topper Section -->
-    <div class="topper-section">
-      <h2>Top 3 </h2>
-      <p id="topper1">1. - 0 km</p>
-      <p id="topper2">2. - 0 km</p>
-      <p id="topper3">3. - 0 km</p>
+      <!-- Topper Section -->
+      <div class="topper-section">
+        <h2>Top 3 </h2>
+        <p id="topper1">1. - 0 km</p>
+        <p id="topper2">2. - 0 km</p>
+        <p id="topper3">3. - 0 km</p>
+      </div>
     </div>
 
     <!-- Running Log Section -->
@@ -740,6 +748,18 @@
         winnersTableContainer.style.display = 'none';
         logTableContainer.style.display = 'block';
         this.textContent = 'Show Winners';
+      }
+    });
+
+    // Toggle Top Section Visibility
+    document.getElementById('toggleTopSection').addEventListener('click', function() {
+      const topSection = document.getElementById('topSection');
+      if (topSection.style.display === 'none') {
+        topSection.style.display = 'block';
+        this.textContent = 'Hide Top Section';
+      } else {
+        topSection.style.display = 'none';
+        this.textContent = 'Show Top Section';
       }
     });
 
