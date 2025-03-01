@@ -110,7 +110,7 @@
             gap: 5px;
         }
 
-        .edit-btn, .delete-btn {
+        .edit-btn, .delete-btn, .export-pdf-btn {
             padding: 5px 10px;
             font-size: 0.9rem;
             border: none;
@@ -136,6 +136,16 @@
         .delete-btn:hover {
             background-color: #e53935;
         }
+
+        .export-pdf-btn {
+            background-color: #2196F3;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .export-pdf-btn:hover {
+            background-color: #1e88e5;
+        }
     </style>
 </head>
 <body>
@@ -149,7 +159,7 @@
         </div>
 
         <div class="table-container">
-            <table>
+            <table id="participantsTable">
                 <thead>
                     <tr>
                         <th>Bib Number</th>
@@ -163,10 +173,15 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Export to PDF Button -->
+        <button class="export-pdf-btn" id="exportPdfBtn">Export to PDF</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
@@ -201,9 +216,9 @@
                         const newRow = document.createElement('tr');
                         newRow.innerHTML = `
                             <td>${participant.bibNumber}</td>
-                            <td contenteditable="false">${participant.fullName}</td>
-                            <td contenteditable="false">${participant.nickName}</td>
-                            <td contenteditable="false">${participant.contact}</td>
+                            <td>${participant.fullName}</td>
+                            <td>${participant.nickName}</td>
+                            <td>${participant.contact}</td>
                             <td class="action-buttons">
                                 <button class="edit-btn" data-id="${participant.fullName}">Edit</button>
                                 <button class="delete-btn" data-id="${participant.fullName}">Delete</button>
@@ -272,6 +287,74 @@
             });
         }
 
+        // Function to export table data as PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add title
+            doc.setFontSize(18);
+            doc.setTextColor(40, 40, 40);
+            doc.text("Participants List", 14, 15);
+
+            // Get table data (excluding the Actions column)
+            const table = document.getElementById("participantsTable");
+            const headers = [];
+            const rows = [];
+
+            // Extract headers (excluding the Actions column)
+            table.querySelectorAll('thead th').forEach((th, index) => {
+                if (index < 4) { // Skip the Actions column
+                    headers.push(th.textContent);
+                }
+            });
+
+            // Extract rows (excluding the Actions column)
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach((td, index) => {
+                    if (index < 4) { // Skip the Actions column
+                        row.push(td.textContent);
+                    }
+                });
+                rows.push(row);
+            });
+
+            // Add table to PDF
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 20,
+                theme: 'striped', // Use a clean striped theme
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 4,
+                    valign: 'middle',
+                    halign: 'left',
+                    textColor: [0, 0, 0], // Black text
+                    fillColor: [255, 255, 255], // White background
+                },
+                headStyles: {
+                    fillColor: [80, 83, 230], // Header background color
+                    textColor: [255, 255, 255], // Header text color
+                    fontSize: 12,
+                    fontStyle: 'bold',
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245], // Alternate row background color
+                },
+                columnStyles: {
+                    0: { cellWidth: 25 }, // Bib Number
+                    1: { cellWidth: 50 }, // Full Name
+                    2: { cellWidth: 40 }, // Nick Name
+                    3: { cellWidth: 45 }, // Contact
+                },
+            });
+
+            // Save the PDF
+            doc.save("participants_list.pdf");
+        }
+
         // Event listeners
         document.getElementById("dataBody").addEventListener('click', function(event) {
             if (event.target.classList.contains('delete-btn')) {
@@ -298,6 +381,9 @@
                 }
             });
         });
+
+        // Export to PDF button
+        document.getElementById("exportPdfBtn").addEventListener("click", exportToPDF);
 
         // Fetch data on page load
         window.onload = fetchData;
