@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participants List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px;
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background-color: #5053e6;
+            color: white;
+            z-index: 2;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #5053e6;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .search-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .search-input {
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #totalDataCount {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        #totalDataCount:hover {
+            color: #5053e6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .edit-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Participants List</h1>
+
+        <div id="totalDataCount">Total Participants: 0</div>
+
+        <div class="search-container">
+            <input type="text" id="searchBar" class="search-input" placeholder="Search by Full Name, Nick Name, or Contact">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bib Number</th>
+                        <th>Full Name</th>
+                        <th>Nick Name</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
+            authDomain: "run-challenge-3cd7b.firebaseapp.com",
+            databaseURL: "https://run-challenge-3cd7b-default-rtdb.firebaseio.com",
+            projectId: "run-challenge-3cd7b",
+            storageBucket: "run-challenge-3cd7b.firebasestorage.app",
+            messagingSenderId: "1009826150691",
+            appId: "1:1009826150691:web:2fe9bed895b701a75f3496",
+            measurementId: "G-TJYBERMRRT"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Function to fetch and display data in ascending order of Bib Number
+        function fetchData() {
+            database.ref('participants').orderByChild('bibNumber').on('value', function(snapshot) {
+                const data = snapshot.val();
+                const dataBody = document.getElementById("dataBody");
+                dataBody.innerHTML = '';
+                if (data) {
+                    // Convert object to array and sort by bibNumber
+                    const participantsArray = Object.entries(data).map(([fullName, participant]) => ({
+                        fullName,
+                        ...participant
+                    }));
+                    participantsArray.sort((a, b) => a.bibNumber - b.bibNumber); // Sort by bibNumber
+
+                    // Display sorted data
+                    participantsArray.forEach(participant => {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td>${participant.bibNumber}</td>
+                            <td contenteditable="false">${participant.fullName}</td>
+                            <td contenteditable="false">${participant.nickName}</td>
+                            <td contenteditable="false">${participant.contact}</td>
+                            <td class="action-buttons">
+                                <button class="edit-btn" data-id="${participant.fullName}">Edit</button>
+                                <button class="delete-btn" data-id="${participant.fullName}">Delete</button>
+                            </td>
+                        `;
+                        dataBody.appendChild(newRow);
+                    });
+                }
+                updateTotalCount();
+            });
+        }
+
+        // Function to update total count
+        function updateTotalCount() {
+            database.ref('participants').once('value', function(snapshot) {
+                const totalCount = snapshot.numChildren();
+                document.getElementById("totalDataCount").textContent = `Total Participants: ${totalCount}`;
+            });
+        }
+
+        // Function to delete a participant
+        function deleteParticipant(fullName) {
+            if (confirm("Are you sure you want to delete this participant?")) {
+                database.ref('participants/' + fullName).remove();
+                fetchData(); // Refresh the table
+            }
+        }
+
+        // Function to enable editing
+        function enableEditing(row) {
+            const cells = row.querySelectorAll('td[contenteditable="false"]');
+            cells.forEach(cell => {
+                cell.contentEditable = true;
+                cell.style.backgroundColor = '#fff3e0'; // Highlight editable cells
+            });
+            const editBtn = row.querySelector('.edit-btn');
+            editBtn.textContent = 'Save';
+            editBtn.removeEventListener('click', enableEditing);
+            editBtn.addEventListener('click', () => saveChanges(row));
+        }
+
+        // Function to save changes
+        function saveChanges(row) {
+            const fullName = row.querySelector('td:nth-child(2)').textContent;
+            const nickName = row.querySelector('td:nth-child(3)').textContent;
+            const contact = row.querySelector('td:nth-child(4)').textContent;
+
+            database.ref('participants/' + fullName).update({
+                nickName: nickName,
+                contact: contact
+            }).then(() => {
+                alert("Changes saved successfully!");
+                fetchData(); // Refresh the table
+            }).catch(error => {
+                alert("Error saving changes: " + error.message);
+            });
+        }
+
+        // Event listeners
+        document.getElementById("dataBody").addEventListener('click', function(event) {
+            if (event.target.classList.contains('delete-btn')) {
+                const fullName = event.target.getAttribute('data-id');
+                deleteParticipant(fullName);
+            } else if (event.target.classList.contains('edit-btn')) {
+                const row = event.target.closest('tr');
+                enableEditing(row);
+            }
+        });
+
+        document.getElementById("searchBar").addEventListener("input", function(event) {
+            const query = event.target.value.toLowerCase();
+            const rows = document.querySelectorAll("#dataBody tr");
+            rows.forEach(row => {
+                const bibNumber = row.cells[0].textContent.toLowerCase();
+                const fullName = row.cells[1].textContent.toLowerCase();
+                const nickName = row.cells[2].textContent.toLowerCase();
+                const contact = row.cells[3].textContent.toLowerCase();
+                if (bibNumber.includes(query) || fullName.includes(query) || nickName.includes(query) || contact.includes(query)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        // Fetch data on page load
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
