@@ -377,24 +377,35 @@
             right: 20px; /* Align to the right */
         }
 
-        /* Broken Blast Animation */
-        @keyframes brokenBlast {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.5) rotate(45deg);
-                opacity: 0.5;
-            }
-            100% {
-                transform: scale(0) rotate(90deg);
-                opacity: 0;
-            }
+        /* Admin buttons styling */
+        .admin-buttons {
+            display: none; /* Hidden by default */
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        .broken-blast-animation {
-            animation: brokenBlast 1s ease-in-out forwards;
+        .admin-buttons button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #38170b; /* Green color for admin buttons */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-buttons button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-buttons button:active {
+            background-color: #1e7e34; /* Even darker green on active */
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -404,9 +415,8 @@
         <button class="close-btn" id="closeBtn">×</button>
         <ul>
             <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#" id="adminButton">Admin</a></li> <!-- Admin button -->
+            <li><a href="#">Rules</a></li>
         </ul>
 
         <!-- Digital BIB Finder Text -->
@@ -444,6 +454,12 @@
         <!-- Header for the screenshot page -->
         <div class="header" id="screenshotHeader" style="display: none;">
             <h1>qgol qnar adOr</h1>
+        </div>
+
+        <!-- Admin buttons container -->
+        <div class="admin-buttons" id="adminButtons">
+            <button class="button" onclick="loadContent('registerData.html')">Register Data</button>
+            <button class="button" onclick="loadContent('dailyRunning.html')">Daily Running</button>
         </div>
 
         <div class="buttons" id="buttonsContainer">
@@ -497,6 +513,17 @@
             });
             selectedButton.classList.add('selected');
         }
+
+        // Admin button click event
+        document.getElementById('adminButton').addEventListener('click', function() {
+            const password = prompt('Enter password:');
+            if (password === '8555') {
+                // Show admin buttons
+                document.getElementById('adminButtons').style.display = 'flex';
+            } else {
+                alert('Incorrect password!');
+            }
+        });
 
         // Function to search for Bib by contact number automatically
         document.getElementById('searchBar').addEventListener('input', function() {
