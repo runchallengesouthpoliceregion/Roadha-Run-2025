@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Data Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .add-button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .add-button-container button {
+            padding: 10px 20px;
+            background-color: #564cc0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #564cc0;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .actions .delete {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .actions .edit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal input, .modal textarea, .modal select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .modal button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .modal .save {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .modal .cancel {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <h1>Saved Data Table</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search by contact number..." oninput="filterTable()">
+    </div>
+    <div class="add-button-container">
+        <button onclick="openEntryForm()">Add New Entry</button>
+    </div>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>BIB Number</th>
+                <th>Image</th>
+                <th>Description</th>
+                <th>Contact Number</th>
+                <th>Timestamp</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Modal for adding new entry -->
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="entryFormModal">
+        <h2>Add New Entry</h2>
+        <input type="text" id="entryBibNumber" placeholder="BIB Number">
+        <input type="text" id="entryDescription" placeholder="Description">
+        <input type="text" id="entryContactNumber" placeholder="Contact Number">
+        <input type="file" id="entryImage" accept="image/*">
+        <button class="save" onclick="saveNewEntry()">Save</button>
+        <button class="cancel" onclick="closeEntryForm()">Cancel</button>
+    </div>
+
+    <!-- Modal for editing data -->
+    <div class="modal" id="editModal">
+        <h2>Edit Data</h2>
+        <input type="text" id="editBibNumber" placeholder="BIB Number">
+        <input type="text" id="editDescription" placeholder="Description">
+        <input type="text" id="editContactNumber" placeholder="Contact Number">
+        <input type="file" id="editImage" accept="image/*">
+        <button class="save" onclick="saveEditedData()">Save</button>
+        <button class="cancel" onclick="closeModal()">Cancel</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVFr7OiCxBG5MVQL3e6BJObqU95Q6MBSc",
+            authDomain: "upload-5a391.firebaseapp.com",
+            databaseURL: "https://upload-5a391-default-rtdb.firebaseio.com",
+            projectId: "upload-5a391",
+            storageBucket: "upload-5a391.firebasestorage.app",
+            messagingSenderId: "368816917135",
+            appId: "1:368816917135:web:ed5873e1a3c37e12da3efa",
+            measurementId: "G-Z3TRXZP3Q6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let currentEditKey = null; // Track the key of the currently edited item
+        let allData = []; // Store all data for filtering
+
+        // Function to fetch data from Firebase and display it in the table
+        function fetchDataAndDisplay() {
+            const tableBody = document.querySelector('#dataTable tbody');
+            database.ref('savedData').once('value', (snapshot) => {
+                const data = snapshot.val();
+                tableBody.innerHTML = ''; // Clear existing rows
+                allData = []; // Reset allData array
+
+                if (data) {
+                    Object.keys(data).forEach((key) => {
+                        const row = data[key];
+                        allData.push({ key, ...row }); // Store data for filtering
+                        const tr = document.createElement('tr');
+                        tr.setAttribute('data-key', key);
+                        tr.innerHTML = `
+                            <td>${row.bibNumber || 'N/A'}</td>
+                            <td><img src="${row.image}" alt="Image"></td>
+                            <td>${row.text}</td>
+                            <td>${row.contactNumber}</td>
+                            <td>${new Date(row.timestamp).toLocaleString()}</td>
+                            <td class="actions">
+                                <button class="delete" onclick="deleteData('${key}')">Delete</button>
+                                <button class="edit" onclick="openEditModal('${key}')">Edit</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                } else {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td colspan="6" style="text-align: center;">No data found.</td>`;
+                    tableBody.appendChild(tr);
+                }
+            }).catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+        }
+
+        // Function to filter the table based on the search input
+        function filterTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const tableBody = document.querySelector('#dataTable tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            allData.forEach((row) => {
+                if (row.contactNumber.toLowerCase().includes(searchInput)) {
+                    const tr = document.createElement('tr');
+                    tr.setAttribute('data-key', row.key);
+                    tr.innerHTML = `
+                        <td>${row.bibNumber || 'N/A'}</td>
+                        <td><img src="${row.image}" alt="Image"></td>
+                        <td>${row.text}</td>
+                        <td>${row.contactNumber}</td>
+                        <td>${new Date(row.timestamp).toLocaleString()}</td>
+                        <td class="actions">
+                            <button class="delete" onclick="deleteData('${row.key}')">Delete</button>
+                            <button class="edit" onclick="openEditModal('${row.key}')">Edit</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                }
+            });
+
+            if (tableBody.innerHTML === '') {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="6" style="text-align: center;">No matching data found.</td>`;
+                tableBody.appendChild(tr);
+            }
+        }
+
+        // Function to open the entry form modal
+        function openEntryForm() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('entryFormModal').style.display = 'block';
+        }
+
+        // Function to close the entry form modal
+        function closeEntryForm() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('entryFormModal').style.display = 'none';
+        }
+
+        // Function to save a new entry
+        function saveNewEntry() {
+            const bibNumber = document.getElementById('entryBibNumber').value;
+            const description = document.getElementById('entryDescription').value;
+            const contactNumber = document.getElementById('entryContactNumber').value;
+            const imageFile = document.getElementById('entryImage').files[0];
+
+            if (!bibNumber || !description || !contactNumber) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageBase64 = e.target.result;
+                    saveDataToFirebase(bibNumber, description, contactNumber, imageBase64);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                saveDataToFirebase(bibNumber, description, contactNumber, null);
+            }
+        }
+
+        // Function to save data to Firebase
+        function saveDataToFirebase(bibNumber, description, contactNumber, imageBase64) {
+            const timestamp = new Date().getTime();
+            const newData = {
+                bibNumber: bibNumber,
+                text: description,
+                contactNumber: contactNumber,
+                timestamp: timestamp,
+                image: imageBase64 || ''
+            };
+
+            database.ref('savedData/' + timestamp).set(newData)
+                .then(() => {
+                    alert('Data saved successfully!');
+                    closeEntryForm();
+                    fetchDataAndDisplay(); // Refresh the table
+                })
+                .catch((error) => {
+                    console.error('Error saving data:', error);
+                });
+        }
+
+        // Function to delete data
+        function deleteData(key) {
+            const password = prompt("Enter password to delete:");
+            if (password === "8555") {
+                database.ref('savedData/' + key).remove()
+                    .then(() => {
+                        alert('Data deleted successfully!');
+                        fetchDataAndDisplay(); // Refresh the table
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting data:', error);
+                    });
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+
+        // Function to open the edit modal
+        function openEditModal(key) {
+            const password = prompt("Enter password to edit:");
+            if (password === "8555") {
+                currentEditKey = key;
+                const row = allData.find((item) => item.key === key);
+                if (row) {
+                    document.getElementById('editBibNumber').value = row.bibNumber || '';
+                    document.getElementById('editDescription').value = row.text || '';
+                    document.getElementById('editContactNumber').value = row.contactNumber || '';
+                }
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('editModal').style.display = 'block';
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+
+        // Function to save edited data
+        function saveEditedData() {
+            const bibNumber = document.getElementById('editBibNumber').value;
+            const description = document.getElementById('editDescription').value;
+            const contactNumber = document.getElementById('editContactNumber').value;
+            const imageFile = document.getElementById('editImage').files[0];
+
+            if (!bibNumber || !description || !contactNumber) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageBase64 = e.target.result;
+                    updateData(currentEditKey, bibNumber, description, contactNumber, imageBase64);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                updateData(currentEditKey, bibNumber, description, contactNumber, null);
+            }
+        }
+
+        // Function to update data in Firebase
+        function updateData(key, bibNumber, description, contactNumber, imageBase64) {
+            const updates = {
+                bibNumber: bibNumber,
+                text: description,
+                contactNumber: contactNumber,
+                timestamp: new Date().getTime(),
+                image: imageBase64 || ''
+            };
+
+            database.ref('savedData/' + key).update(updates)
+                .then(() => {
+                    alert('Data updated successfully!');
+                    closeModal();
+                    fetchDataAndDisplay(); // Refresh the table
+                })
+                .catch((error) => {
+                    console.error('Error updating data:', error);
+                });
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('editModal').style.display = 'none';
+            currentEditKey = null;
+        }
+
+        // Fetch and display data when the page loads
+        fetchDataAndDisplay();
+    </script>
+</body>
+</html>
