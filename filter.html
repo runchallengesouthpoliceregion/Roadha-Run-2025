@@ -527,7 +527,7 @@
     // Function to approve data when "Approve" is pressed
     window.approveData = function(key) {
       const password = prompt("Enter password to approve data:");
-      if (password === "123") {
+      if (password === "8555") {
         const dataRef = ref(database, 'runningLogs/' + key);
         update(dataRef, {
           status: "approved" // Change the status to approved
