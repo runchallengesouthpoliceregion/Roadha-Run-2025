@@ -224,25 +224,35 @@
             });
         }
 
-        // Function to delete a participant
+        // Function to delete a participant (with password protection)
         function deleteParticipant(fullName) {
-            if (confirm("Are you sure you want to delete this participant?")) {
-                database.ref('participants/' + fullName).remove();
-                fetchData(); // Refresh the table
+            const password = prompt("Enter password to delete:");
+            if (password === "8555") {
+                if (confirm("Are you sure you want to delete this participant?")) {
+                    database.ref('participants/' + fullName).remove();
+                    fetchData(); // Refresh the table
+                }
+            } else {
+                alert("Incorrect password!");
             }
         }
 
-        // Function to enable editing
+        // Function to enable editing (with password protection)
         function enableEditing(row) {
-            const cells = row.querySelectorAll('td[contenteditable="false"]');
-            cells.forEach(cell => {
-                cell.contentEditable = true;
-                cell.style.backgroundColor = '#fff3e0'; // Highlight editable cells
-            });
-            const editBtn = row.querySelector('.edit-btn');
-            editBtn.textContent = 'Save';
-            editBtn.removeEventListener('click', enableEditing);
-            editBtn.addEventListener('click', () => saveChanges(row));
+            const password = prompt("Enter password to edit:");
+            if (password === "8555") {
+                const cells = row.querySelectorAll('td[contenteditable="false"]');
+                cells.forEach(cell => {
+                    cell.contentEditable = true;
+                    cell.style.backgroundColor = '#fff3e0'; // Highlight editable cells
+                });
+                const editBtn = row.querySelector('.edit-btn');
+                editBtn.textContent = 'Save';
+                editBtn.removeEventListener('click', enableEditing);
+                editBtn.addEventListener('click', () => saveChanges(row));
+            } else {
+                alert("Incorrect password!");
+            }
         }
 
         // Function to save changes
