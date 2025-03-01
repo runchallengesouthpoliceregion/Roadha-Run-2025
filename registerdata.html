@@ -110,7 +110,7 @@
             gap: 5px;
         }
 
-        .edit-btn, .delete-btn, .export-pdf-btn {
+        .edit-btn, .delete-btn, .export-pdf-btn, .edit-nickname-btn {
             padding: 5px 10px;
             font-size: 0.9rem;
             border: none;
@@ -146,6 +146,64 @@
         .export-pdf-btn:hover {
             background-color: #1e88e5;
         }
+
+        .edit-nickname-btn {
+            background-color: #FFC107;
+            color: black;
+        }
+
+        .edit-nickname-btn:hover {
+            background-color: #e0a800;
+        }
+
+        /* Modal for editing Nick Name */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .modal-content button.confirm {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .modal-content button.cancel {
+            background-color: #f44336;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -176,6 +234,16 @@
 
         <!-- Export to PDF Button -->
         <button class="export-pdf-btn" id="exportPdfBtn">Export to PDF</button>
+    </div>
+
+    <!-- Modal for editing Nick Name -->
+    <div class="modal" id="editNickNameModal">
+        <div class="modal-content">
+            <h3>Edit Nick Name</h3>
+            <input type="text" id="editNickNameInput" placeholder="Enter new Nick Name">
+            <button class="confirm" id="confirmEditNickName">Save</button>
+            <button class="cancel" id="cancelEditNickName">Cancel</button>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -220,7 +288,7 @@
                             <td>${participant.nickName}</td>
                             <td>${participant.contact}</td>
                             <td class="action-buttons">
-                                <button class="edit-btn" data-id="${participant.fullName}">Edit</button>
+                                <button class="edit-nickname-btn" data-id="${participant.fullName}">Edit Nick Name</button>
                                 <button class="delete-btn" data-id="${participant.fullName}">Delete</button>
                             </td>
                         `;
@@ -252,40 +320,77 @@
             }
         }
 
-        // Function to enable editing (with password protection)
-        function enableEditing(row) {
+        // Function to edit Nick Name (with password protection)
+        let currentParticipant = null;
+
+        function openEditNickNameModal(fullName) {
             const password = prompt("Enter password to edit:");
             if (password === "8555") {
-                const cells = row.querySelectorAll('td[contenteditable="false"]');
-                cells.forEach(cell => {
-                    cell.contentEditable = true;
-                    cell.style.backgroundColor = '#fff3e0'; // Highlight editable cells
-                });
-                const editBtn = row.querySelector('.edit-btn');
-                editBtn.textContent = 'Save';
-                editBtn.removeEventListener('click', enableEditing);
-                editBtn.addEventListener('click', () => saveChanges(row));
+                currentParticipant = fullName;
+                const modal = document.getElementById("editNickNameModal");
+                modal.style.display = "flex";
             } else {
                 alert("Incorrect password!");
             }
         }
 
-        // Function to save changes
-        function saveChanges(row) {
-            const fullName = row.querySelector('td:nth-child(2)').textContent;
-            const nickName = row.querySelector('td:nth-child(3)').textContent;
-            const contact = row.querySelector('td:nth-child(4)').textContent;
-
-            database.ref('participants/' + fullName).update({
-                nickName: nickName,
-                contact: contact
-            }).then(() => {
-                alert("Changes saved successfully!");
-                fetchData(); // Refresh the table
-            }).catch(error => {
-                alert("Error saving changes: " + error.message);
-            });
+        function closeEditNickNameModal() {
+            const modal = document.getElementById("editNickNameModal");
+            modal.style.display = "none";
+            currentParticipant = null;
         }
+
+        function saveNickName() {
+            const newNickName = document.getElementById("editNickNameInput").value;
+            if (newNickName && currentParticipant) {
+                database.ref('participants/' + currentParticipant).update({
+                    nickName: newNickName
+                }).then(() => {
+                    alert("Nick Name updated successfully!");
+                    fetchData(); // Refresh the table
+                    closeEditNickNameModal();
+                }).catch(error => {
+                    alert("Error updating Nick Name: " + error.message);
+                });
+            }
+        }
+
+        // Event listeners
+        document.getElementById("dataBody").addEventListener('click', function(event) {
+            if (event.target.classList.contains('delete-btn')) {
+                const fullName = event.target.getAttribute('data-id');
+                deleteParticipant(fullName);
+            } else if (event.target.classList.contains('edit-nickname-btn')) {
+                const fullName = event.target.getAttribute('data-id');
+                openEditNickNameModal(fullName);
+            }
+        });
+
+        document.getElementById("searchBar").addEventListener("input", function(event) {
+            const query = event.target.value.toLowerCase();
+            const rows = document.querySelectorAll("#dataBody tr");
+            rows.forEach(row => {
+                const bibNumber = row.cells[0].textContent.toLowerCase();
+                const fullName = row.cells[1].textContent.toLowerCase();
+                const nickName = row.cells[2].textContent.toLowerCase();
+                const contact = row.cells[3].textContent.toLowerCase();
+                if (bibNumber.includes(query) || fullName.includes(query) || nickName.includes(query) || contact.includes(query)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        // Export to PDF button
+        document.getElementById("exportPdfBtn").addEventListener("click", exportToPDF);
+
+        // Modal event listeners
+        document.getElementById("confirmEditNickName").addEventListener("click", saveNickName);
+        document.getElementById("cancelEditNickName").addEventListener("click", closeEditNickNameModal);
+
+        // Fetch data on page load
+        window.onload = fetchData;
 
         // Function to export table data as PDF
         function exportToPDF() {
@@ -354,39 +459,6 @@
             // Save the PDF
             doc.save("participants_list.pdf");
         }
-
-        // Event listeners
-        document.getElementById("dataBody").addEventListener('click', function(event) {
-            if (event.target.classList.contains('delete-btn')) {
-                const fullName = event.target.getAttribute('data-id');
-                deleteParticipant(fullName);
-            } else if (event.target.classList.contains('edit-btn')) {
-                const row = event.target.closest('tr');
-                enableEditing(row);
-            }
-        });
-
-        document.getElementById("searchBar").addEventListener("input", function(event) {
-            const query = event.target.value.toLowerCase();
-            const rows = document.querySelectorAll("#dataBody tr");
-            rows.forEach(row => {
-                const bibNumber = row.cells[0].textContent.toLowerCase();
-                const fullName = row.cells[1].textContent.toLowerCase();
-                const nickName = row.cells[2].textContent.toLowerCase();
-                const contact = row.cells[3].textContent.toLowerCase();
-                if (bibNumber.includes(query) || fullName.includes(query) || nickName.includes(query) || contact.includes(query)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
-
-        // Export to PDF button
-        document.getElementById("exportPdfBtn").addEventListener("click", exportToPDF);
-
-        // Fetch data on page load
-        window.onload = fetchData;
     </script>
 </body>
 </html>
