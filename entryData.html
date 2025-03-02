@@ -131,7 +131,7 @@
         <th>Nickname</th>
         <th>Distance (km)</th>
         <th>Status</th>
-        <th class="action-column">Action</th> <!-- Added class for Action column -->
+        <th class="action-column">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -146,9 +146,9 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <!-- jsPDF and html2canvas Libraries -->
+  <!-- jsPDF and autoTable Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
   <script>
     // Firebase Configuration
     const firebaseConfig = {
@@ -168,6 +168,16 @@
     // Password for editing and deleting
     const PASSWORD = "8555";
 
+    // Function to format date as "15 October 2023"
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString; // Return the original string if it's not a valid date
+      }
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('en-GB', options);
+    }
+
     // Fetch and Display Data
     function fetchRunningLogs() {
       const runningLogsRef = database.ref('runningLogs');
@@ -181,7 +191,7 @@
             const log = logs[key];
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td class="editable" data-key="${key}" data-field="date">${log.date}</td>
+              <td class="editable" data-key="${key}" data-field="date">${formatDate(log.date)}</td>
               <td>${log.contact}</td>
               <td>${log.bibNumber}</td>
               <td>${log.name}</td>
@@ -220,7 +230,7 @@
 
       const input = document.createElement('input');
       input.type = field === 'date' ? 'date' : 'number';
-      input.value = originalValue;
+      input.value = field === 'date' ? new Date(originalValue).toISOString().split('T')[0] : originalValue;
 
       cell.textContent = '';
       cell.appendChild(input);
@@ -228,7 +238,8 @@
 
       input.addEventListener('blur', () => {
         const newValue = input.value;
-        cell.textContent = newValue;
+        const formattedValue = field === 'date' ? formatDate(newValue) : newValue;
+        cell.textContent = formattedValue;
 
         // Prompt for password
         const password = prompt("Enter password to edit:");
@@ -289,7 +300,7 @@
       rows.forEach(row => {
         const contact = row.cells[1].textContent.toLowerCase();
         const bibNumber = row.cells[2].textContent.toLowerCase();
-        const date = row.cells[0].textContent;
+        const date = new Date(row.cells[0].textContent).toISOString().split('T')[0]; // Convert to YYYY-MM-DD for comparison
         const distance = parseFloat(row.cells[5].textContent);
 
         // Check if the row matches the search term and date range
@@ -311,35 +322,56 @@
     // Export to PDF Function
     function exportToPDF() {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF('p', 'mm', 'a4');
+      const doc = new jsPDF('p', 'pt', 'a4');
 
-      // Hide the Action column
-      const actionColumns = document.querySelectorAll('.action-column');
-      actionColumns.forEach(column => {
-        column.style.display = 'none';
+      // Add title to the PDF
+      doc.setFontSize(18);
+      doc.text("Running Logs", 40, 40);
+
+      // Get table data
+      const table = document.getElementById('runningLogsTable');
+      const headers = [];
+      const rows = [];
+
+      // Extract headers
+      table.querySelectorAll('thead th').forEach(header => {
+        if (header.classList.contains('action-column')) return; // Skip the Action column
+        headers.push(header.textContent.trim());
       });
 
-      // Capture the table with html2canvas
-      html2canvas(document.getElementById('runningLogsTable'), {
-        scale: 2, // Increase scale for better quality
-        logging: true,
-        useCORS: true,
-      }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210; // A4 width in mm
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        // Add image to PDF
-        doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-
-        // Save the PDF
-        doc.save('running_logs.pdf');
-
-        // Restore the Action column visibility
-        actionColumns.forEach(column => {
-          column.style.display = '';
+      // Extract rows
+      table.querySelectorAll('tbody tr').forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach((cell, index) => {
+          if (row.cells[index].classList.contains('action-column')) return; // Skip the Action column
+          rowData.push(cell.textContent.trim());
         });
+        rows.push(rowData);
       });
+
+      // Add table to PDF
+      doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 60, // Start below the title
+        theme: 'striped', // Apply a theme
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
+        headStyles: {
+          fillColor: [86, 76, 192], // Header background color
+          textColor: [255, 255, 255], // Header text color
+        },
+      });
+
+      // Add total distance to the PDF
+      const totalDistance = document.getElementById('totalDistance').textContent;
+      doc.setFontSize(12);
+      doc.text(`Total Distance: ${totalDistance} km`, 40, doc.autoTable.previous.finalY + 30);
+
+      // Save the PDF
+      doc.save('running_logs.pdf');
     }
 
     // Add event listeners to filters
