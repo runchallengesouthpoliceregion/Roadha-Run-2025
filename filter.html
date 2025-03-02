@@ -462,7 +462,7 @@
         <td>
           ${data.status === "pending" ? 
             `<button id="approveBtn_${key}" onclick="approveData('${key}')">Approve</button>` : ''}
-          <button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>
+          <!-- Delete Button is hidden -->
         </td>
       `;
     }
@@ -543,7 +543,7 @@
             row.cells[6].className = "status-approved";
 
             // Remove the Approve button
-            row.cells[8].innerHTML = `<button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>`;
+            row.cells[8].innerHTML = ``; // No Delete button
 
             // Update the total distance
             updateTotalDistance(name, distance);
