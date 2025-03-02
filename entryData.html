@@ -104,6 +104,14 @@
     .export-btn:hover {
       background-color: #45a049;
     }
+
+    .editable {
+      cursor: pointer;
+    }
+
+    .editable:hover {
+      background-color: #e0e0e0;
+    }
   </style>
 </head>
 <body>
@@ -123,7 +131,7 @@
         <th>Nickname</th>
         <th>Distance (km)</th>
         <th>Status</th>
-        <th>Action</th>
+        <th class="action-column">Action</th> <!-- Added class for Action column -->
       </tr>
     </thead>
     <tbody>
@@ -157,6 +165,9 @@
     const app = firebase.initializeApp(firebaseConfig);
     const database = app.database();
 
+    // Password for editing and deleting
+    const PASSWORD = "8555";
+
     // Fetch and Display Data
     function fetchRunningLogs() {
       const runningLogsRef = database.ref('runningLogs');
@@ -170,16 +181,21 @@
             const log = logs[key];
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>${log.date}</td>
+              <td class="editable" data-key="${key}" data-field="date">${log.date}</td>
               <td>${log.contact}</td>
               <td>${log.bibNumber}</td>
               <td>${log.name}</td>
               <td>${log.nickname}</td>
-              <td>${log.distance}</td>
+              <td class="editable" data-key="${key}" data-field="distance">${log.distance}</td>
               <td class="status-${log.status}">${log.status}</td>
-              <td><button class="delete-btn" data-key="${key}">Delete</button></td>
+              <td class="action-column"><button class="delete-btn" data-key="${key}">Delete</button></td>
             `;
             tableBody.appendChild(row);
+          });
+
+          // Add event listeners to editable fields
+          document.querySelectorAll('.editable').forEach(cell => {
+            cell.addEventListener('click', makeEditable);
           });
 
           // Add event listeners to delete buttons
@@ -195,8 +211,62 @@
       });
     }
 
+    // Make Cell Editable
+    function makeEditable(event) {
+      const cell = event.target;
+      const key = cell.getAttribute('data-key');
+      const field = cell.getAttribute('data-field');
+      const originalValue = cell.textContent;
+
+      const input = document.createElement('input');
+      input.type = field === 'date' ? 'date' : 'number';
+      input.value = originalValue;
+
+      cell.textContent = '';
+      cell.appendChild(input);
+      input.focus();
+
+      input.addEventListener('blur', () => {
+        const newValue = input.value;
+        cell.textContent = newValue;
+
+        // Prompt for password
+        const password = prompt("Enter password to edit:");
+        if (password === PASSWORD) {
+          updateLog(key, field, newValue);
+        } else {
+          alert("Incorrect password!");
+          cell.textContent = originalValue;
+        }
+      });
+
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          input.blur();
+        }
+      });
+    }
+
+    // Update Log Function
+    function updateLog(key, field, newValue) {
+      const runningLogsRef = database.ref('runningLogs/' + key);
+      runningLogsRef.update({ [field]: newValue })
+        .then(() => {
+          alert('Log updated successfully!');
+        })
+        .catch((error) => {
+          console.error('Error updating log: ', error);
+        });
+    }
+
     // Delete Log Function
     function deleteLog(event) {
+      const password = prompt("Enter password to delete:");
+      if (password !== PASSWORD) {
+        alert("Incorrect password!");
+        return;
+      }
+
       const key = event.target.getAttribute('data-key');
       const runningLogsRef = database.ref('runningLogs/' + key);
       runningLogsRef.remove()
@@ -227,10 +297,10 @@
         const matchesDateRange = (!startDate || date >= startDate) && (!endDate || date <= endDate);
 
         if (matchesSearch && matchesDateRange) {
-          row.classList.add('highlight');
+          row.style.display = ''; // Show the row
           totalDistance += distance;
         } else {
-          row.classList.remove('highlight');
+          row.style.display = 'none'; // Hide the row
         }
       });
 
@@ -242,15 +312,33 @@
     function exportToPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF('p', 'mm', 'a4');
-      const table = document.getElementById('runningLogsTable');
 
-      html2canvas(table).then((canvas) => {
+      // Hide the Action column
+      const actionColumns = document.querySelectorAll('.action-column');
+      actionColumns.forEach(column => {
+        column.style.display = 'none';
+      });
+
+      // Capture the table with html2canvas
+      html2canvas(document.getElementById('runningLogsTable'), {
+        scale: 2, // Increase scale for better quality
+        logging: true,
+        useCORS: true,
+      }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 210; // A4 width in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
+        // Add image to PDF
         doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+        // Save the PDF
         doc.save('running_logs.pdf');
+
+        // Restore the Action column visibility
+        actionColumns.forEach(column => {
+          column.style.display = '';
+        });
       });
     }
 
