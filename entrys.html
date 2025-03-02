@@ -234,11 +234,18 @@
       const distance = parseFloat(document.getElementById('distance').value); // Parse as float
 
       if (date && contact && bibNumber && name && nickname && !isNaN(distance)) {
+        // Format the date to include the month name
+        const formattedDate = new Date(date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
         // Save data to Firebase (using App 2)
         const runningLogRef = database2.ref('runningLogs');
         const newEntry = runningLogRef.push();
         newEntry.set({
-          date: new Date(date).toLocaleDateString(), // Only date, no time
+          date: formattedDate, // Use the formatted date with month name
           contact: contact, // Save contact number
           bibNumber: bibNumber, // Save BIB Number
           name: name,
