@@ -444,6 +444,13 @@
       updateNameFilter(data.name); // Update the name filter dropdown
     });
 
+    // Function to format the date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options); // Format: "Month Day, Year"
+    }
+
     // Function to add a row to the table
     function addRowToTable(key, data) {
       const table = document.getElementById('logTable').getElementsByTagName('tbody')[0];
@@ -451,7 +458,7 @@
 
       row.id = `row_${key}`; // Assign a unique ID to the row
       row.innerHTML = `
-        <td>${data.date}</td>
+        <td>${formatDate(data.date)}</td> <!-- Updated date format -->
         <td>${data.name}</td>
         <td>${data.nickname}</td>
         <td>${data.bibNumber}</td> <!-- BIB Number Column -->
