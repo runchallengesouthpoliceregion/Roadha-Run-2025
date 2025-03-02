@@ -105,6 +105,17 @@
       box-sizing: border-box;
     }
 
+    /* Date Filter Dropdown Styles */
+    #dateFilter {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
     /* Table Styles */
     .table-container {
       max-height: 400px; /* Set a fixed height for the table body */
@@ -168,6 +179,13 @@
       font-size: 24px;
       font-weight: bold;
       color: #595802; /* Dark green color */
+      margin: 10px 0;
+    }
+
+    #totalRunners {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
       margin: 10px 0;
     }
 
@@ -256,6 +274,10 @@
         font-size: 20px;
       }
 
+      #totalRunners {
+        font-size: 16px;
+      }
+
       .medal-details {
         font-size: 1em;
       }
@@ -289,6 +311,10 @@
 
       #totalDistance {
         font-size: 18px;
+      }
+
+      #totalRunners {
+        font-size: 14px;
       }
 
       .medal-details {
@@ -330,6 +356,10 @@
         font-size: 16px;
       }
 
+      #totalRunners {
+        font-size: 12px;
+      }
+
       .medal-details {
         font-size: 0.8em;
       }
@@ -349,9 +379,16 @@
       <!-- Dynamic Name Options will be added here -->
     </select>
 
+    <!-- Date Filter Dropdown -->
+    <select id="dateFilter">
+      <option value="">All Dates</option>
+      <!-- Dynamic Date Options will be added here -->
+    </select>
+
     <div class="total-distance-container">
       <h2>Total Distance</h2>
       <p id="totalDistance">0 km</p>
+      <p id="totalRunners">Total Runners: 0</p> <!-- Added Total Runners Display -->
     </div>
 
     <!-- Running Log Section -->
@@ -431,6 +468,7 @@
     const database = getDatabase(app);
 
     const nameSet = new Set(); // To store unique names for the filter dropdown
+    const dateSet = new Set(); // To store unique dates for the filter dropdown
     const totalDistanceMap = new Map(); // To store total distance for each person
 
     // Fetch data from Firebase
@@ -442,6 +480,7 @@
         updateTotalDistance(data.name, parseFloat(data.distance));
       }
       updateNameFilter(data.name); // Update the name filter dropdown
+      updateDateFilter(data.date); // Update the date filter dropdown
     });
 
     // Function to format the date
@@ -491,34 +530,62 @@
       });
     }
 
-    // Function to filter the table by exact contact number or selected name
+    // Function to update the date filter dropdown
+    function updateDateFilter(date) {
+      if (date) {
+        const formattedDate = formatDate(date);
+        if (!dateSet.has(formattedDate)) {
+          dateSet.add(formattedDate); // Add the new date to the set
+        }
+      }
+
+      const dateFilter = document.getElementById('dateFilter');
+      dateFilter.innerHTML = `<option value="">All Dates</option>`; // Reset the dropdown
+
+      dateSet.forEach(date => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        dateFilter.appendChild(option);
+      });
+    }
+
+    // Function to filter the table by exact contact number, selected name, or selected date
     function filterTable() {
       const selectedName = document.getElementById('nameFilter').value.toLowerCase();
+      const selectedDate = document.getElementById('dateFilter').value;
       const searchTerm = document.getElementById('contactSearch').value.trim(); // Get the exact contact number
       const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
       let totalDistance = 0;
+      let totalRunners = 0;
 
       // Show all rows if "All" is selected and no contact number is entered
-      if (selectedName === "" && searchTerm === "") {
+      if (selectedName === "" && searchTerm === "" && selectedDate === "") {
         for (let row of rows) {
           row.style.display = ""; // Show row
           if (row.cells[6].textContent === "approved") {
             totalDistance += parseFloat(row.cells[5].textContent); // Add distance to total
+            totalRunners++; // Count total runners
           }
         }
       } else {
-        // Show rows that match the selected name or exact contact number
+        // Show rows that match the selected name, exact contact number, or selected date
         for (let row of rows) {
           const nameCell = row.cells[1].textContent.toLowerCase(); // Name is in the 2nd column (index 1)
           const contactCell = row.cells[4].textContent.trim(); // Contact is in the 5th column (index 4)
+          const dateCell = row.cells[0].textContent.trim(); // Date is in the 1st column (index 0)
 
           const nameMatch = selectedName !== "" && nameCell.includes(selectedName);
           const contactMatch = searchTerm !== "" && contactCell === searchTerm; // Exact match for contact
+          const dateMatch = selectedDate !== "" && dateCell === selectedDate; // Match for date
 
-          if (nameMatch || contactMatch) {
+          if (nameMatch || contactMatch || dateMatch) {
             row.style.display = ""; // Show row
             if (row.cells[6].textContent === "approved") {
               totalDistance += parseFloat(row.cells[5].textContent); // Add distance to total
+              if (selectedDate !== "" && dateCell === selectedDate) {
+                totalRunners++; // Count runners for the selected date
+              }
             }
           } else {
             row.style.display = "none"; // Hide row
@@ -529,6 +596,12 @@
       // Update the total distance display
       const totalDistanceElement = document.getElementById('totalDistance');
       totalDistanceElement.textContent = `${totalDistance.toFixed(2)} km`;
+
+      // Update the total runners display
+      const totalRunnersElement = document.getElementById('totalRunners');
+      if (totalRunnersElement) {
+        totalRunnersElement.textContent = `Total Runners: ${totalRunners}`;
+      }
     }
 
     // Function to approve data when "Approve" is pressed
@@ -699,6 +772,7 @@
     // Add event listeners for filtering
     document.getElementById('nameFilter').addEventListener('change', filterTable);
     document.getElementById('contactSearch').addEventListener('input', filterTable);
+    document.getElementById('dateFilter').addEventListener('change', filterTable);
     document.getElementById('bibSearch').addEventListener('input', filterRankingTable);
   </script>
 </body>
