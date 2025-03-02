@@ -110,7 +110,7 @@
             gap: 5px;
         }
 
-        .edit-btn, .delete-btn, .export-pdf-btn, .edit-nickname-btn {
+        .edit-btn, .delete-btn, .export-pdf-btn, .edit-nickname-btn, .edit-contact-btn {
             padding: 5px 10px;
             font-size: 0.9rem;
             border: none;
@@ -156,7 +156,16 @@
             background-color: #e0a800;
         }
 
-        /* Modal for editing Nick Name */
+        .edit-contact-btn {
+            background-color: #9C27B0;
+            color: white;
+        }
+
+        .edit-contact-btn:hover {
+            background-color: #7B1FA2;
+        }
+
+        /* Modal for editing Nick Name and Contact */
         .modal {
             display: none;
             position: fixed;
@@ -246,6 +255,16 @@
         </div>
     </div>
 
+    <!-- Modal for editing Contact -->
+    <div class="modal" id="editContactModal">
+        <div class="modal-content">
+            <h3>Edit Contact</h3>
+            <input type="text" id="editContactInput" placeholder="Enter new Contact">
+            <button class="confirm" id="confirmEditContact">Save</button>
+            <button class="cancel" id="cancelEditContact">Cancel</button>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -289,6 +308,7 @@
                             <td>${participant.contact}</td>
                             <td class="action-buttons">
                                 <button class="edit-nickname-btn" data-id="${participant.fullName}">Edit Nick Name</button>
+                                <button class="edit-contact-btn" data-id="${participant.fullName}">Edit Contact</button>
                                 <button class="delete-btn" data-id="${participant.fullName}">Delete</button>
                             </td>
                         `;
@@ -355,6 +375,39 @@
             }
         }
 
+        // Function to edit Contact (with password protection)
+        function openEditContactModal(fullName) {
+            const password = prompt("Enter password to edit:");
+            if (password === "8555") {
+                currentParticipant = fullName;
+                const modal = document.getElementById("editContactModal");
+                modal.style.display = "flex";
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+
+        function closeEditContactModal() {
+            const modal = document.getElementById("editContactModal");
+            modal.style.display = "none";
+            currentParticipant = null;
+        }
+
+        function saveContact() {
+            const newContact = document.getElementById("editContactInput").value;
+            if (newContact && currentParticipant) {
+                database.ref('participants/' + currentParticipant).update({
+                    contact: newContact
+                }).then(() => {
+                    alert("Contact updated successfully!");
+                    fetchData(); // Refresh the table
+                    closeEditContactModal();
+                }).catch(error => {
+                    alert("Error updating Contact: " + error.message);
+                });
+            }
+        }
+
         // Event listeners
         document.getElementById("dataBody").addEventListener('click', function(event) {
             if (event.target.classList.contains('delete-btn')) {
@@ -363,6 +416,9 @@
             } else if (event.target.classList.contains('edit-nickname-btn')) {
                 const fullName = event.target.getAttribute('data-id');
                 openEditNickNameModal(fullName);
+            } else if (event.target.classList.contains('edit-contact-btn')) {
+                const fullName = event.target.getAttribute('data-id');
+                openEditContactModal(fullName);
             }
         });
 
@@ -388,6 +444,8 @@
         // Modal event listeners
         document.getElementById("confirmEditNickName").addEventListener("click", saveNickName);
         document.getElementById("cancelEditNickName").addEventListener("click", closeEditNickNameModal);
+        document.getElementById("confirmEditContact").addEventListener("click", saveContact);
+        document.getElementById("cancelEditContact").addEventListener("click", closeEditContactModal);
 
         // Fetch data on page load
         window.onload = fetchData;
