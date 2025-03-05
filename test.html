@@ -17,7 +17,7 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-image: url('WhatsApp Image 2025-02-20 at 21.37.12.jpeg'); /* Add your image URL */
+      background-image: url('6184000488555530013.jpg'); /* Add your image URL */
       background-size: cover;
       background-position: center;
       position: relative;
@@ -30,7 +30,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-image: url('WhatsApp Image 2025-02-20 at 21.37.12.jpeg'); /* Your watermark logo */
+      background-image: url(''); /* Your watermark logo */
       background-size: 100% 100%; /* Make the image fill the entire container */
       background-repeat: no-repeat;
       opacity: 0.1; /* Control the opacity of the watermark */
@@ -60,7 +60,9 @@
       width: 90%;
       max-width: 900px;
       margin: 20px auto;
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       padding: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
@@ -68,21 +70,50 @@
       overflow: hidden;
     }
 
+    @font-face {
+      font-family: 'SameeAvasThaana';
+      src: url('fonts/Samee_Avas_Thaana.ttf'); /* Ensure the font file is in the correct path */
+    }
+
     h1 {
-      font-size: 2rem;
+      font-size: 3rem;
       margin-bottom: 20px;
       text-align: center;
       color: #333;
-      font-family: 'Faruma', sans-serif; /* Apply Faruma font */
+      font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
     }
 
-    select {
+    /* Search Bar Styles */
+    #contactSearch {
       width: 100%;
       padding: 10px;
       font-size: 16px;
       margin: 10px 0;
       border: 1px solid #ddd;
       border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    /* Name Filter Dropdown Styles */
+    #nameFilter {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    /* Date Filter Dropdown Styles */
+    #dateFilter {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
 
     /* Table Styles */
@@ -138,7 +169,7 @@
     .total-distance-container {
       margin-top: 20px;
       padding: 15px;
-      background-color: #e8f5e9; /* Light green background */
+      background-color: #cee5d07a; /* Light green background */
       border-radius: 8px;
       text-align: center;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -147,7 +178,14 @@
     #totalDistance {
       font-size: 24px;
       font-weight: bold;
-      color: #2e7d32; /* Dark green color */
+      color: #595802; /* Dark green color */
+      margin: 10px 0;
+    }
+
+    #totalRunners {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
       margin: 10px 0;
     }
 
@@ -157,43 +195,138 @@
       font-weight: bold;
     }
 
-    /* Congratulation Animation */
-    @keyframes medalAnimation {
-      0% { transform: scale(0); opacity: 0; }
-      50% { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .congratulation {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 2em;
-      color: rgb(35, 3, 5);
-      animation: medalAnimation 4s ease-in-out;
-      z-index: 1000;
-    }
-
-    /* Winners Button Styles */
-    .winners-button-container {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 10px;
-    }
-
-    #winnersButton {
-      background-color: #2196F3; /* Blue color for the button */
-    }
-
-    #winnersButton:hover {
-      background-color: #1e88e5;
-    }
-
-    /* Winners Table Styles */
-    #winnersTableContainer {
+    /* Ranking Table Styles */
+    #rankingTableContainer {
       display: none; /* Initially hidden */
       margin-top: 20px;
+    }
+
+    /* Medal Styles */
+    .medal {
+      font-size: 1.5em;
+    }
+
+    .bronze {
+      color: #cd7f32; /* Bronze color */
+    }
+
+    .silver {
+      color: #c0c0c0; /* Silver color */
+    }
+
+    .gold {
+      color: #ffd700; /* Gold color */
+    }
+
+    /* Medal Details Section */
+    .medal-details {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    /* Highlight Animation */
+    @keyframes highlight {
+      0% {
+        background-color: #ffeb3b; /* Yellow */
+      }
+      50% {
+        background-color: #ffcc80; /* Orange */
+      }
+      100% {
+        background-color: #ffeb3b; /* Yellow */
+      }
+    }
+
+    .highlight {
+      animation: highlight 1s ease-in-out infinite;
+    }
+
+    /* Winner List Container */
+    #winnerListContainer {
+      display: none; /* Initially hidden */
+      margin-top: 20px;
+    }
+
+    /* Small Bib Image Styles */
+    .small-bib {
+      width: 100px;
+      height: 60px;
+      background-image: url('100km challenge.png'); /* Add your bib background image */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffd700; /* Gold color */
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      cursor: pointer; /* Add pointer cursor for clickable bib */
+    }
+
+    /* High-Quality Bib Image Styles (Landscape) */
+    .digital-bib {
+      font-size: 8rem; /* Larger font size for HD */
+      font-weight: bold;
+      color: #ffd700; /* Gold color */
+      background-image: url('100km challenge.png'); /* Add your bib background image */
+      background-size: cover; /* Ensure the image covers the entire container */
+      background-position: center; /* Center the background image */
+      padding: 60px; /* Larger padding */
+      border-radius: 20px; /* Rounded corners */
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column; /* Stack children vertically */
+      align-items: center; /* Center children horizontally */
+      justify-content: flex-start; /* Align children to the top */
+      width: 1920px; /* Landscape width for HD */
+      height: 1080px; /* Landscape height for HD */
+      position: fixed; /* Ensure it stays in the viewport */
+      top: 0; /* Position at the top */
+      left: 0; /* Position at the left */
+      z-index: 9999; /* Ensure it's above other elements */
+    }
+
+    /* Topper Name Styles */
+    .topper-name {
+      font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
+      font-size: 4rem; /* Larger font size for topper name */
+      color: #333; /* Dark color for visibility */
+      position: absolute;
+      top: 05%; /* Position the topper name at the center */
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    /* Bib Name and Number Styles */
+    .bib-info {
+      font-family: 'Arial', sans-serif; /* Use a clean font for bib info */
+      font-size: 4rem; /* Larger font size for bib info */
+      color: #0e092e; /* Dark color for visibility */
+      position: absolute;
+      top: 50%; /* Position the bib info below the topper name */
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    /* Save Bib Button */
+    .save-bib-button {
+      margin-top: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .save-bib-button:hover {
+      background-color: #0056b3;
     }
 
     /* Responsive Styles */
@@ -226,6 +359,14 @@
       #totalDistance {
         font-size: 20px;
       }
+
+      #totalRunners {
+        font-size: 16px;
+      }
+
+      .medal-details {
+        font-size: 1em;
+      }
     }
 
     @media (max-width: 480px) {
@@ -256,6 +397,14 @@
 
       #totalDistance {
         font-size: 18px;
+      }
+
+      #totalRunners {
+        font-size: 14px;
+      }
+
+      .medal-details {
+        font-size: 0.9em;
       }
     }
 
@@ -292,12 +441,23 @@
       #totalDistance {
         font-size: 16px;
       }
+
+      #totalRunners {
+        font-size: 12px;
+      }
+
+      .medal-details {
+        font-size: 0.8em;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>ރޯދަ ރަން 2025</h1>
+    <h1> qgol qnar adOr</h1>
+
+    <!-- Search Bar for Contact Number -->
+    <input type="text" id="contactSearch" placeholder="Enter full contact number to search...">
 
     <!-- Name Filter Dropdown -->
     <select id="nameFilter">
@@ -305,16 +465,28 @@
       <!-- Dynamic Name Options will be added here -->
     </select>
 
+    <!-- Date Filter Dropdown -->
+    <select id="dateFilter">
+      <option value="">All Dates</option>
+      <!-- Dynamic Date Options will be added here -->
+    </select>
+
     <div class="total-distance-container">
       <h2>Total Distance</h2>
       <p id="totalDistance">0 km</p>
+      <p id="totalRunners">Total Runners: 0</p> <!-- Added Total Runners Display -->
     </div>
 
     <!-- Running Log Section -->
     <div class="running-log-header">
       <h2>Running Log</h2>
+      <!-- Medal Details -->
+      <div class="medal-details">
+        🥉 Bronze for 50 km | 🥈 Silver for 75 km | 🥇 Gold for 100 km
+      </div>
       <div class="winners-button-container">
-        <button id="winnersButton">Show Winners</button>
+        <button id="rankingButton">Show Ranking</button>
+        <button id="winnerListButton">Show Winner List</button> <!-- Button to toggle winner list -->
       </div>
     </div>
     <div class="table-container">
@@ -323,9 +495,12 @@
           <tr>
             <th>Date</th>
             <th>Name</th>
-            <th>Nickname</th>
+            <th>BIB Name</th>
+            <th>BIB Number</th>
+            <th style="display: none;">Contact</th> <!-- Hidden Column -->
             <th>Distance (km)</th>
             <th>Status</th>
+            <th>Medals</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -335,21 +510,46 @@
       </table>
     </div>
 
-    <!-- Winners Section -->
-    <div id="winnersTableContainer">
-      <h2>Winners</h2>
+    <!-- Ranking Table Section -->
+    <div id="rankingTableContainer">
+      <h2>Ranking Table</h2>
+      <!-- Search Bar for BIB Number in Ranking Table -->
+      <input type="text" id="bibSearch" placeholder="Enter BIB number to filter ranking...">
       <div class="table-container">
-        <table id="winnersTable">
+        <table id="rankingTable">
           <thead>
             <tr>
-              <th>Position</th>
+              <th>Rank</th>
               <th>Name</th>
-              <th>Nickname</th>
+              <th>BIB Number</th>
               <th>Total Distance (km)</th>
+              <th>Medals</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Winners will appear here -->
+            <!-- Ranking data will appear here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Winner List Section -->
+    <div id="winnerListContainer">
+      <h2>Winner List (100 km or more)</h2>
+      <div class="table-container">
+        <table id="winnerListTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>BIB Number</th>
+              <th>Total Distance (km)</th>
+              <th>Medals</th>
+              <th>Digital Bib</th>
+              <th>Save Bib</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Winner data will appear here -->
           </tbody>
         </table>
       </div>
@@ -377,17 +577,28 @@
     const database = getDatabase(app);
 
     const nameSet = new Set(); // To store unique names for the filter dropdown
+    const dateSet = new Set(); // To store unique dates for the filter dropdown
     const totalDistanceMap = new Map(); // To store total distance for each person
-    const winners = []; // Array to store winners in order of completion
+    const winnerSet = new Set(); // To store winners who have completed 100 km or more
 
     // Fetch data from Firebase
     const runningLogRef = ref(database, 'runningLogs');
     onChildAdded(runningLogRef, function(snapshot) {
       const data = snapshot.val();
       addRowToTable(snapshot.key, data);
-      updateTotalDistance(data.name, parseFloat(data.distance));
+      if (data.status === "approved") {
+        updateTotalDistance(data.name, parseFloat(data.distance));
+      }
       updateNameFilter(data.name); // Update the name filter dropdown
+      updateDateFilter(data.date); // Update the date filter dropdown
     });
+
+    // Function to format the date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('en-US', options); // Format: "Month Day, Year"
+    }
 
     // Function to add a row to the table
     function addRowToTable(key, data) {
@@ -396,15 +607,18 @@
 
       row.id = `row_${key}`; // Assign a unique ID to the row
       row.innerHTML = `
-        <td>${data.date}</td>
+        <td>${formatDate(data.date)}</td> <!-- Updated date format -->
         <td>${data.name}</td>
         <td>${data.nickname}</td>
+        <td>${data.bibNumber}</td> <!-- BIB Number Column -->
+        <td style="display: none;">${data.contact}</td> <!-- Hidden Column -->
         <td>${data.distance}</td>
         <td class="status-${data.status}">${data.status}</td>
+        <td class="medal">${getMedals(data.name)}</td>
         <td>
           ${data.status === "pending" ? 
             `<button id="approveBtn_${key}" onclick="approveData('${key}')">Approve</button>` : ''}
-          <button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>
+          <!-- Delete Button is hidden -->
         </td>
       `;
     }
@@ -424,110 +638,86 @@
         option.textContent = name;
         nameFilter.appendChild(option);
       });
+    }
 
-      // Add event listener to filter by selected name
-      nameFilter.addEventListener('change', function() {
-        filterTableByName(this.value);
+    // Function to update the date filter dropdown
+    function updateDateFilter(date) {
+      if (date) {
+        const formattedDate = formatDate(date);
+        if (!dateSet.has(formattedDate)) {
+          dateSet.add(formattedDate); // Add the new date to the set
+        }
+      }
+
+      const dateFilter = document.getElementById('dateFilter');
+      dateFilter.innerHTML = `<option value="">All Dates</option>`; // Reset the dropdown
+
+      dateSet.forEach(date => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        dateFilter.appendChild(option);
       });
     }
 
-    // Function to filter the table based on selected name
-    function filterTableByName(selectedName) {
+    // Function to filter the table by exact contact number, selected name, or selected date
+    function filterTable() {
+      const selectedName = document.getElementById('nameFilter').value.toLowerCase();
+      const selectedDate = document.getElementById('dateFilter').value;
+      const searchTerm = document.getElementById('contactSearch').value.trim(); // Get the exact contact number
       const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
       let totalDistance = 0;
+      let totalRunners = 0;
 
-      for (let row of rows) {
-        const nameCell = row.cells[1].textContent;
-        if (selectedName === "" || nameCell === selectedName) {
+      // Show all rows if "All" is selected and no contact number is entered
+      if (selectedName === "" && searchTerm === "" && selectedDate === "") {
+        for (let row of rows) {
           row.style.display = ""; // Show row
-          if (selectedName !== "") {
-            totalDistance += parseFloat(row.cells[3].textContent); // Add distance to total
+          if (row.cells[6].textContent === "approved") {
+            totalDistance += parseFloat(row.cells[5].textContent); // Add distance to total
+            totalRunners++; // Count total runners
           }
-        } else {
-          row.style.display = "none"; // Hide row
+        }
+      } else {
+        // Show rows that match the selected name, exact contact number, or selected date
+        for (let row of rows) {
+          const nameCell = row.cells[1].textContent.toLowerCase(); // Name is in the 2nd column (index 1)
+          const contactCell = row.cells[4].textContent.trim(); // Contact is in the 5th column (index 4)
+          const dateCell = row.cells[0].textContent.trim(); // Date is in the 1st column (index 0)
+
+          const nameMatch = selectedName !== "" && nameCell.includes(selectedName);
+          const contactMatch = searchTerm !== "" && contactCell === searchTerm; // Exact match for contact
+          const dateMatch = selectedDate !== "" && dateCell === selectedDate; // Match for date
+
+          if (nameMatch || contactMatch || dateMatch) {
+            row.style.display = ""; // Show row
+            if (row.cells[6].textContent === "approved") {
+              totalDistance += parseFloat(row.cells[5].textContent); // Add distance to total
+              if (selectedDate !== "" && dateCell === selectedDate) {
+                totalRunners++; // Count runners for the selected date
+              }
+            }
+          } else {
+            row.style.display = "none"; // Hide row
+          }
         }
       }
 
       // Update the total distance display
       const totalDistanceElement = document.getElementById('totalDistance');
-      if (selectedName === "") {
-        totalDistanceElement.textContent = "0 km"; // Reset to 0 if "All" is selected
-      } else {
-        totalDistanceElement.textContent = `${totalDistance.toFixed(2)} km`; // Display total distance
+      totalDistanceElement.textContent = `${totalDistance.toFixed(2)} km`;
+
+      // Update the total runners display
+      const totalRunnersElement = document.getElementById('totalRunners');
+      if (totalRunnersElement) {
+        totalRunnersElement.textContent = `Total Runners: ${totalRunners}`;
       }
-    }
-
-    // Function to update total distance for each person
-    function updateTotalDistance(name, distance) {
-      if (totalDistanceMap.has(name)) {
-        totalDistanceMap.set(name, totalDistanceMap.get(name) + distance);
-      } else {
-        totalDistanceMap.set(name, distance);
-      }
-
-      // Check if the person has completed 100 km
-      if (totalDistanceMap.get(name) >= 100 && !winners.includes(name)) {
-        winners.push(name); // Add the winner to the array
-        highlightWinner(name);
-        showCongratulation(name);
-        updateWinnersTable(); // Update the winners table
-      }
-    }
-
-    // Function to update the winners table
-    function updateWinnersTable() {
-      const winnersTable = document.getElementById('winnersTable').getElementsByTagName('tbody')[0];
-      winnersTable.innerHTML = ''; // Clear the table
-
-      winners.forEach((name, index) => {
-        const row = winnersTable.insertRow();
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${name}</td>
-          <td>${getNickname(name)}</td>
-          <td>${totalDistanceMap.get(name).toFixed(2)} km</td>
-        `;
-      });
-    }
-
-    // Function to get the nickname of a participant
-    function getNickname(name) {
-      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
-      for (let row of rows) {
-        if (row.cells[1].textContent === name) {
-          return row.cells[2].textContent;
-        }
-      }
-      return '';
-    }
-
-    // Function to highlight the winner
-    function highlightWinner(name) {
-      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
-      for (let row of rows) {
-        if (row.cells[1].textContent === name) {
-          row.classList.add('winner');
-        }
-      }
-    }
-
-    // Function to show congratulation message with animation
-    function showCongratulation(name) {
-      const congratulationDiv = document.createElement('div');
-      congratulationDiv.className = 'congratulation';
-      congratulationDiv.textContent = `Congratulations ${name}! 🎉`;
-      document.body.appendChild(congratulationDiv);
-
-      // Remove the congratulation message after 3 seconds
-      setTimeout(() => {
-        congratulationDiv.remove();
-      }, 3000);
     }
 
     // Function to approve data when "Approve" is pressed
     window.approveData = function(key) {
       const password = prompt("Enter password to approve data:");
-      if (password === "123") {
+      if (password === "8555") {
         const dataRef = ref(database, 'runningLogs/' + key);
         update(dataRef, {
           status: "approved" // Change the status to approved
@@ -535,9 +725,18 @@
           // Update the UI immediately
           const row = document.getElementById(`row_${key}`);
           if (row) {
-            row.cells[4].textContent = "approved";
-            row.cells[4].className = "status-approved";
-            row.cells[5].innerHTML = `<button id="deleteBtn_${key}" onclick="deleteData('${key}')">Delete</button>`; // Keep delete button
+            const name = row.cells[1].textContent; // Get the name from the table
+            const distance = parseFloat(row.cells[5].textContent); // Get the distance from the table
+
+            // Update the status in the UI
+            row.cells[6].textContent = "approved";
+            row.cells[6].className = "status-approved";
+
+            // Remove the Approve button
+            row.cells[8].innerHTML = ``; // No Delete button
+
+            // Update the total distance
+            updateTotalDistance(name, distance);
           }
           alert("Data approved successfully!");
         }).catch(error => {
@@ -567,21 +766,270 @@
       }
     };
 
-    // Toggle Winners Table Visibility
-    document.getElementById('winnersButton').addEventListener('click', function() {
-      const winnersTableContainer = document.getElementById('winnersTableContainer');
+    // Function to update total distance for each person
+    function updateTotalDistance(name, distance) {
+      if (totalDistanceMap.has(name)) {
+        totalDistanceMap.set(name, totalDistanceMap.get(name) + distance);
+      } else {
+        totalDistanceMap.set(name, distance);
+      }
+
+      // Update the medals for the person
+      updateMedals(name);
+
+      // Update the ranking table
+      updateRankingTable();
+
+      // Check if the person has completed 100 km or more and add to the winner list
+      if (totalDistanceMap.get(name) >= 100 && !winnerSet.has(name)) {
+        winnerSet.add(name);
+        updateWinnerList(name);
+      }
+    }
+
+    // Function to update the medals for a person
+    function updateMedals(name) {
+      const totalDistance = totalDistanceMap.get(name) || 0;
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+
+      for (let row of rows) {
+        if (row.cells[1].textContent === name) {
+          row.cells[7].innerHTML = getMedals(name);
+        }
+      }
+    }
+
+    // Function to get the medals for a person
+    function getMedals(name) {
+      const totalDistance = totalDistanceMap.get(name) || 0;
+      let medals = '';
+
+      if (totalDistance >= 100) {
+        medals += '<span class="medal gold">🥇</span>'; // Gold medal
+      }
+      if (totalDistance >= 75) {
+        medals += '<span class="medal silver">🥈</span>'; // Silver medal
+      }
+      if (totalDistance >= 50) {
+        medals += '<span class="medal bronze">🥉</span>'; // Bronze medal
+      }
+
+      return medals;
+    }
+
+    // Function to update the ranking table
+    function updateRankingTable() {
+      const rankingTable = document.getElementById('rankingTable').getElementsByTagName('tbody')[0];
+      rankingTable.innerHTML = ''; // Clear the table
+
+      const sortedParticipants = Array.from(totalDistanceMap.entries()).sort((a, b) => b[1] - a[1]);
+
+      sortedParticipants.forEach(([name, distance], index) => {
+        const row = rankingTable.insertRow();
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${name}</td>
+          <td>${getBibNumber(name)}</td> <!-- BIB Number Column -->
+          <td>${distance.toFixed(2)} km</td>
+          <td class="medal">${getMedals(name)}</td>
+        `;
+      });
+    }
+
+    // Function to get the BIB Number of a participant
+    function getBibNumber(name) {
+      const rows = document.getElementById('logTable').getElementsByTagName('tbody')[0].rows;
+      for (let row of rows) {
+        if (row.cells[1].textContent === name) {
+          return row.cells[3].textContent;
+        }
+      }
+      return '';
+    }
+
+    // Function to filter the ranking table by BIB number and highlight the row
+    function filterRankingTable() {
+      const searchTerm = document.getElementById('bibSearch').value.trim(); // Get the BIB number
+      const rows = document.getElementById('rankingTable').getElementsByTagName('tbody')[0].rows;
+
+      for (let row of rows) {
+        const bibCell = row.cells[2].textContent.trim(); // BIB number is in the 3rd column (index 2)
+
+        if (searchTerm === "" || bibCell === searchTerm) {
+          row.style.display = ""; // Show row
+          if (bibCell === searchTerm) {
+            row.classList.add('highlight'); // Add highlight animation
+          } else {
+            row.classList.remove('highlight'); // Remove highlight animation
+          }
+        } else {
+          row.style.display = "none"; // Hide row
+          row.classList.remove('highlight'); // Remove highlight animation
+        }
+      }
+    }
+
+    // Function to update the winner list
+    function updateWinnerList(name) {
+      const winnerListTable = document.getElementById('winnerListTable').getElementsByTagName('tbody')[0];
+      const bibNumber = getBibNumber(name);
+
+      const row = winnerListTable.insertRow();
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${bibNumber}</td>
+        <td>100 km</td> <!-- Always show 100 km in the winner list -->
+        <td class="medal">${getMedals(name)}</td>
+        <td>
+          <div class="small-bib" onclick="previewBib('${bibNumber}', '${name}')">${bibNumber}</div>
+        </td>
+        <td>
+          <button class="save-bib-button" onclick="saveBib('${name}', '${bibNumber}')">Save Bib</button>
+        </td>
+      `;
+    }
+
+    // Function to preview the digital bib
+    window.previewBib = function(bibNumber, name) {
+      const bibElement = document.createElement('div');
+      bibElement.className = 'digital-bib';
+
+      // Add the topper name manually
+      const topperNameElement = document.createElement('div');
+      topperNameElement.className = 'topper-name';
+      topperNameElement.textContent = '1446 qnar adOr'; // Manually add the topper name
+      bibElement.appendChild(topperNameElement);
+
+      // Add the bib number and name
+      const bibInfoElement = document.createElement('div');
+      bibInfoElement.className = 'bib-info';
+      bibInfoElement.textContent = `${bibNumber} - ${name}`; // Add the bib number and name
+      bibElement.appendChild(bibInfoElement);
+
+      // Append the bib element to the body and make it visible
+      document.body.appendChild(bibElement);
+
+      // Add a small delay to ensure the element is fully rendered
+      setTimeout(() => {
+        // Use html2canvas to render the bib in HD
+        html2canvas(bibElement, {
+          scale: 3, // Increase scale for higher resolution (HD)
+          logging: true, // Enable logging for debugging
+          useCORS: true, // Allow cross-origin images
+          width: 1920, // Set width for HD
+          height: 1080, // Set height for HD
+          scrollX: 0, // Ensure no horizontal scroll
+          scrollY: 0, // Ensure no vertical scroll
+          windowWidth: 1920, // Set window width to match the bib
+          windowHeight: 1080, // Set window height to match the bib
+          x: 0, // Ensure the capture starts from the left edge
+          y: 0, // Ensure the capture starts from the top edge
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `${bibNumber}_bib.png`;
+          link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
+          link.click();
+
+          // Remove the bib element from the DOM after saving
+          document.body.removeChild(bibElement);
+        }).catch(error => {
+          console.error("Error capturing bib image:", error);
+          document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
+        });
+      }, 100); // 100ms delay to ensure the element is fully rendered
+    };
+
+    // Function to save the digital bib as an HD landscape image
+    window.saveBib = function(name, bibNumber) {
+      const bibElement = document.createElement('div');
+      bibElement.className = 'digital-bib';
+
+      // Add the topper name manually
+      const topperNameElement = document.createElement('div');
+      topperNameElement.className = 'topper-name';
+      topperNameElement.textContent = '1446 qnar adOr'; // Manually add the topper name
+      bibElement.appendChild(topperNameElement);
+
+      // Add the bib number and name
+      const bibInfoElement = document.createElement('div');
+      bibInfoElement.className = 'bib-info';
+      bibInfoElement.textContent = `${bibNumber} - ${name}`; // Add the bib number and name
+      bibElement.appendChild(bibInfoElement);
+
+      // Append the bib element to the body and make it visible
+      document.body.appendChild(bibElement);
+
+      // Add a small delay to ensure the element is fully rendered
+      setTimeout(() => {
+        // Use html2canvas to render the bib in HD
+        html2canvas(bibElement, {
+          scale: 3, // Increase scale for higher resolution (HD)
+          logging: true, // Enable logging for debugging
+          useCORS: true, // Allow cross-origin images
+          width: 1920, // Set width for HD
+          height: 1080, // Set height for HD
+          scrollX: 0, // Ensure no horizontal scroll
+          scrollY: 0, // Ensure no vertical scroll
+          windowWidth: 1920, // Set window width to match the bib
+          windowHeight: 1080, // Set window height to match the bib
+          x: 0, // Ensure the capture starts from the left edge
+          y: 0, // Ensure the capture starts from the top edge
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `${name}_bib.png`;
+          link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
+          link.click();
+
+          // Remove the bib element from the DOM after saving
+          document.body.removeChild(bibElement);
+        }).catch(error => {
+          console.error("Error capturing bib image:", error);
+          document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
+        });
+      }, 100); // 100ms delay to ensure the element is fully rendered
+    };
+
+    // Toggle Ranking Table Visibility
+    document.getElementById('rankingButton').addEventListener('click', function() {
+      const rankingTableContainer = document.getElementById('rankingTableContainer');
       const logTableContainer = document.querySelector('.table-container');
 
-      if (winnersTableContainer.style.display === 'none') {
-        winnersTableContainer.style.display = 'block';
+      if (rankingTableContainer.style.display === 'none') {
+        rankingTableContainer.style.display = 'block';
         logTableContainer.style.display = 'none';
         this.textContent = 'Show Running Log';
       } else {
-        winnersTableContainer.style.display = 'none';
+        rankingTableContainer.style.display = 'none';
         logTableContainer.style.display = 'block';
-        this.textContent = 'Show Winners';
+        this.textContent = 'Show Ranking';
       }
     });
+
+    // Toggle Winner List Visibility
+    document.getElementById('winnerListButton').addEventListener('click', function() {
+      const winnerListContainer = document.getElementById('winnerListContainer');
+      const logTableContainer = document.querySelector('.table-container');
+      const rankingTableContainer = document.getElementById('rankingTableContainer');
+
+      if (winnerListContainer.style.display === 'none') {
+        winnerListContainer.style.display = 'block';
+        logTableContainer.style.display = 'none';
+        rankingTableContainer.style.display = 'none';
+        this.textContent = 'Hide Winner List';
+      } else {
+        winnerListContainer.style.display = 'none';
+        logTableContainer.style.display = 'block';
+        this.textContent = 'Show Winner List';
+      }
+    });
+
+    // Add event listeners for filtering
+    document.getElementById('nameFilter').addEventListener('change', filterTable);
+    document.getElementById('contactSearch').addEventListener('input', filterTable);
+    document.getElementById('dateFilter').addEventListener('change', filterTable);
+    document.getElementById('bibSearch').addEventListener('input', filterRankingTable);
   </script>
+  <!-- Include html2canvas library for saving the bib as an image -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
