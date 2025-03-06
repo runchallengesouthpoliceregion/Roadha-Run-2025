@@ -267,77 +267,68 @@
       cursor: pointer; /* Add pointer cursor for clickable bib */
     }
 
-    /* Preview Overlay */
-    .preview-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    }
-
-    .preview-bib {
-      font-size: 8rem;
+    /* High-Quality Bib Image Styles (Landscape) */
+    .digital-bib {
+      font-size: 8rem; /* Larger font size for HD */
       font-weight: bold;
-      color: #ffd700;
+      color: #ffd700; /* Gold color */
       background-image: url('100km challenge(2).png'); /* Add your bib background image */
       background-size: 100% 100%; /* Stretch the image to fit the container */
-      background-position: center;
-      background-repeat: no-repeat;
-      padding: 1px;
-      border-radius: 20px;
+      background-position: center; /* Center the background image */
+      background-repeat: no-repeat; /* Prevent the background image from repeating */
+      padding: 1px; /* Larger padding */
+      border-radius: 20px; /* Rounded corners */
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      width: 80%;
-      max-width: 800px;
-      height: auto;
-      position: relative;
+      flex-direction: column; /* Stack children vertically */
+      align-items: center; /* Center children horizontally */
+      justify-content: flex-start; /* Align children to the top */
+      width: 1920px; /* Landscape width for HD */
+      height: 1080px; /* Landscape height for HD */
+      position: absolute; /* Use absolute positioning instead of fixed */
+      top: 0; /* Position at the top */
+      left: 0; /* Position at the left */
+      z-index: 9999; /* Ensure it's above other elements */
+      overflow: hidden; /* Ensure no overflow */
     }
 
-    .preview-bib .topper-name {
+    /* Topper Name Styles */
+    .topper-name {
       font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
-      font-size: 3rem;
-      color: #333;
+      font-size: 4rem; /* Larger font size for topper name */
+      color: #333; /* Dark color for visibility */
       position: absolute;
-      top: 10%;
+      top: 05%; /* Position the topper name at the center */
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
     }
 
-    .preview-bib .bib-info {
+    /* Bib Name and Number Styles */
+    .bib-info {
       font-family: 'Arial', sans-serif; /* Use a clean font for bib info */
-      font-size: 3rem;
+      font-size: 4rem; /* Larger font size for bib info */
       color: #0e092e; /* Dark color for visibility */
       position: absolute;
-      top: 40%;
+      top: 35%; /* Position the bib info below the topper name */
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
     }
 
-    .close-preview {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #ff0000;
+    /* Save Bib Button */
+    .save-bib-button {
+      margin-top: 10px;
+      background-color: #007bff;
       color: white;
       border: none;
-      padding: 10px 15px;
+      padding: 10px 20px;
       border-radius: 5px;
       cursor: pointer;
     }
 
-    .close-preview:hover {
-      background-color: #cc0000;
+    .save-bib-button:hover {
+      background-color: #0056b3;
     }
 
     /* Responsive Styles */
@@ -564,15 +555,6 @@
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
-
-  <!-- Preview Overlay -->
-  <div id="previewOverlay" class="preview-overlay" style="display: none;">
-    <div class="preview-bib">
-      <div class="topper-name">1446 qnar adOr</div>
-      <div class="bib-info" id="previewBibInfo"></div>
-      <button class="close-preview" onclick="closePreview()">Close</button>
     </div>
   </div>
 
@@ -911,21 +893,6 @@
 
     // Function to preview the digital bib
     window.previewBib = function(bibNumber, name) {
-      const previewOverlay = document.getElementById('previewOverlay');
-      const previewBibInfo = document.getElementById('previewBibInfo');
-
-      previewBibInfo.textContent = `${bibNumber} - ${name}`;
-      previewOverlay.style.display = 'flex';
-    };
-
-    // Function to close the preview
-    window.closePreview = function() {
-      const previewOverlay = document.getElementById('previewOverlay');
-      previewOverlay.style.display = 'none';
-    };
-
-    // Function to save the bib as an image
-    window.saveBib = function(name, bibNumber) {
       const bibElement = document.createElement('div');
       bibElement.className = 'digital-bib';
 
@@ -959,29 +926,78 @@
           windowHeight: 1080, // Set window height to match the bib
           x: 0, // Ensure the capture starts from the left edge
           y: 0, // Ensure the capture starts from the top edge
-          onclone: (clonedDoc) => {
-            // Ensure the cloned element is fully visible
-            const clonedBib = clonedDoc.querySelector('.digital-bib');
-            clonedBib.style.position = 'absolute'; // Ensure it's not fixed
-            clonedBib.style.top = '0';
-            clonedBib.style.left = '0';
-          },
-        })
-          .then((canvas) => {
-            const link = document.createElement('a');
-            link.download = `${name}_bib.png`;
-            link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
-            link.click();
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `${bibNumber}_bib.png`;
+          link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
+          link.click();
 
-            // Remove the bib element from the DOM after saving
-            document.body.removeChild(bibElement);
-          })
-          .catch((error) => {
-            console.error('Error capturing bib image:', error);
-            document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
-          });
+          // Remove the bib element from the DOM after saving
+          document.body.removeChild(bibElement);
+        }).catch(error => {
+          console.error("Error capturing bib image:", error);
+          document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
+        });
       }, 100); // 100ms delay to ensure the element is fully rendered
     };
+
+    window.saveBib = function (name, bibNumber) {
+  const bibElement = document.createElement('div');
+  bibElement.className = 'digital-bib';
+
+  // Add the topper name manually
+  const topperNameElement = document.createElement('div');
+  topperNameElement.className = 'topper-name';
+  topperNameElement.textContent = '1446 qnar adOr'; // Manually add the topper name
+  bibElement.appendChild(topperNameElement);
+
+  // Add the bib number and name
+  const bibInfoElement = document.createElement('div');
+  bibInfoElement.className = 'bib-info';
+  bibInfoElement.textContent = `${bibNumber} - ${name}`; // Add the bib number and name
+  bibElement.appendChild(bibInfoElement);
+
+  // Append the bib element to the body and make it visible
+  document.body.appendChild(bibElement);
+
+  // Add a small delay to ensure the element is fully rendered
+  setTimeout(() => {
+    // Use html2canvas to render the bib in HD
+    html2canvas(bibElement, {
+      scale: 3, // Increase scale for higher resolution (HD)
+      logging: true, // Enable logging for debugging
+      useCORS: true, // Allow cross-origin images
+      width: 1920, // Set width for HD
+      height: 1080, // Set height for HD
+      scrollX: 0, // Ensure no horizontal scroll
+      scrollY: 0, // Ensure no vertical scroll
+      windowWidth: 1920, // Set window width to match the bib
+      windowHeight: 1080, // Set window height to match the bib
+      x: 0, // Ensure the capture starts from the left edge
+      y: 0, // Ensure the capture starts from the top edge
+      onclone: (clonedDoc) => {
+        // Ensure the cloned element is fully visible
+        const clonedBib = clonedDoc.querySelector('.digital-bib');
+        clonedBib.style.position = 'absolute'; // Ensure it's not fixed
+        clonedBib.style.top = '0';
+        clonedBib.style.left = '0';
+      },
+    })
+      .then((canvas) => {
+        const link = document.createElement('a');
+        link.download = `${name}_bib.png`;
+        link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
+        link.click();
+
+        // Remove the bib element from the DOM after saving
+        document.body.removeChild(bibElement);
+      })
+      .catch((error) => {
+        console.error('Error capturing bib image:', error);
+        document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
+      });
+  }, 100); // 100ms delay to ensure the element is fully rendered
+};
 
     // Toggle Ranking Table Visibility
     document.getElementById('rankingButton').addEventListener('click', function() {
