@@ -72,7 +72,7 @@
 
     @font-face {
       font-family: 'SameeAvasThaana';
-      src: url(fonts/Samee_Avas_Thaana.ttf);
+      src: url('fonts/Samee_Avas_Thaana.ttf'); /* Ensure the font file is in the correct path */
     }
 
     h1 {
@@ -80,7 +80,7 @@
       margin-bottom: 20px;
       text-align: center;
       color: #333;
-      font-family: 'SameeAvasThaana', sans-serif; /* Apply Faruma font */
+      font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
     }
 
     /* Search Bar Styles */
@@ -243,6 +243,80 @@
       animation: highlight 1s ease-in-out infinite;
     }
 
+    /* Winner List Container */
+    #winnerListContainer {
+      display: none; /* Initially hidden */
+      margin-top: 20px;
+    }
+
+    /* Small Bib Image Styles */
+    .small-bib {
+      width: 150px; /* Adjusted for landscape */
+      height: 100px; /* Adjusted for landscape */
+      background-image: url('Roadha Run Certificate 1446.jpeg'); /* Add your bib background image */
+      background-size: cover; /* Ensure the image covers the container */
+      background-position: center; /* Center the background image */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffd700; /* Gold color */
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      cursor: pointer; /* Add pointer cursor for clickable bib */
+    }
+
+    /* High-Quality Bib Image Styles (Landscape) */
+    .digital-bib {
+      font-size: 8rem; /* Larger font size for HD */
+      font-weight: bold;
+      color: #ffd700; /* Gold color */
+      background-image: url('Roadha Run Certificate 1446.jpeg'); /* Add your bib background image */
+      background-size: cover; /* Ensure the image covers the container */
+      background-position: center; /* Center the background image */
+      background-repeat: no-repeat; /* Prevent the background image from repeating */
+      padding: 1px; /* Larger padding */
+      border-radius: 0px; /* Rounded corners */
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column; /* Stack children vertically */
+      align-items: center; /* Center children horizontally */
+      justify-content: center; /* Center children vertically */
+      width: 2560px; /* Landscape width for HD */
+      height: 1812px; /* Landscape height for HD */
+      position: absolute; /* Use absolute positioning instead of fixed */
+      top: 0; /* Position at the top */
+      left: 0; /* Position at the left */
+      z-index: 9999; /* Ensure it's above other elements */
+      overflow: hidden; /* Ensure no overflow */
+    }
+
+    /* Bib Name and Number Styles */
+    .bib-info {
+      font-family: 'Arial', sans-serif; /* Use a clean font for bib info */
+      font-size: 4rem; /* Larger font size for bib info */
+      color: #fafafc; /* Dark color for visibility */
+      text-align: center;
+      padding-top: 0px; /* Adjust top padding manually */
+      padding-bottom: 400px; /* Adjust bottom padding manually */
+    }
+
+    /* Save Bib Button */
+    .save-bib-button {
+      margin-top: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .save-bib-button:hover {
+      background-color: #0056b3;
+    }
+
     /* Responsive Styles */
     @media (max-width: 768px) {
       h1 {
@@ -400,6 +474,7 @@
       </div>
       <div class="winners-button-container">
         <button id="rankingButton">Show Ranking</button>
+        <button id="winnerListButton">Show Winner List</button> <!-- Button to toggle winner list -->
       </div>
     </div>
     <div class="table-container">
@@ -445,6 +520,28 @@
         </table>
       </div>
     </div>
+
+    <!-- Winner List Section -->
+    <div id="winnerListContainer">
+      <h2>Winner List </h2>
+      <div class="table-container">
+        <table id="winnerListTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>BIB Number</th>
+              <th>Total Distance (km)</th>
+              <th>Medals</th>
+              <th>Certificate</th>
+              <th>Save</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Winner data will appear here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- Firebase SDK -->
@@ -470,6 +567,7 @@
     const nameSet = new Set(); // To store unique names for the filter dropdown
     const dateSet = new Set(); // To store unique dates for the filter dropdown
     const totalDistanceMap = new Map(); // To store total distance for each person
+    const winnerSet = new Set(); // To store winners who have completed 100 km or more
 
     // Fetch data from Firebase
     const runningLogRef = ref(database, 'runningLogs');
@@ -669,6 +767,12 @@
 
       // Update the ranking table
       updateRankingTable();
+
+      // Check if the person has completed 100 km or more and add to the winner list
+      if (totalDistanceMap.get(name) >= 100 && !winnerSet.has(name)) {
+        winnerSet.add(name);
+        updateWinnerList(name);
+      }
     }
 
     // Function to update the medals for a person
@@ -753,6 +857,122 @@
       }
     }
 
+    // Function to update the winner list
+    function updateWinnerList(name) {
+      const winnerListTable = document.getElementById('winnerListTable').getElementsByTagName('tbody')[0];
+      const bibNumber = getBibNumber(name);
+
+      const row = winnerListTable.insertRow();
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${bibNumber}</td>
+        <td>100 km</td> <!-- Always show 100 km in the winner list -->
+        <td class="medal">${getMedals(name)}</td>
+        <td>
+          <div class="small-bib" onclick="previewBib('${bibNumber}', '${name}')">${bibNumber}</div>
+        </td>
+        <td>
+          <button class="save-bib-button" onclick="saveBib('${name}', '${bibNumber}')">Save </button>
+        </td>
+      `;
+    }
+
+    // Function to preview the digital bib
+    window.previewBib = function(bibNumber, name) {
+      const bibElement = document.createElement('div');
+      bibElement.className = 'digital-bib';
+
+      // Add the bib number and name
+      const bibInfoElement = document.createElement('div');
+      bibInfoElement.className = 'bib-info';
+      bibInfoElement.textContent = `${bibNumber} - ${name}`; // Add the bib number and name
+      bibElement.appendChild(bibInfoElement);
+
+      // Append the bib element to the body and make it visible
+      document.body.appendChild(bibElement);
+
+      // Add a small delay to ensure the element is fully rendered
+      setTimeout(() => {
+        // Use html2canvas to render the bib in HD
+        html2canvas(bibElement, {
+          scale: 3, // Increase scale for higher resolution (HD)
+          logging: true, // Enable logging for debugging
+          useCORS: true, // Allow cross-origin images
+          width: 2560, // Set width for HD
+          height: 1812, // Set height for HD
+          scrollX: 0, // Ensure no horizontal scroll
+          scrollY: 0, // Ensure no vertical scroll
+          windowWidth: 2560, // Set window width to match the bib
+          windowHeight: 1812, // Set window height to match the bib
+          x: 0, // Ensure the capture starts from the left edge
+          y: 0, // Ensure the capture starts from the top edge
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `${bibNumber}_Certificate.png`;
+          link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
+          link.click();
+
+          // Remove the bib element from the DOM after saving
+          document.body.removeChild(bibElement);
+        }).catch(error => {
+          console.error("Error capturing bib image:", error);
+          document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
+        });
+      }, 100); // 100ms delay to ensure the element is fully rendered
+    };
+
+    window.saveBib = function (name, bibNumber) {
+      const bibElement = document.createElement('div');
+      bibElement.className = 'digital-bib';
+
+      // Add the bib number and name
+      const bibInfoElement = document.createElement('div');
+      bibInfoElement.className = 'bib-info';
+      bibInfoElement.textContent = `${bibNumber} - ${name}`; // Add the bib number and name
+      bibElement.appendChild(bibInfoElement);
+
+      // Append the bib element to the body and make it visible
+      document.body.appendChild(bibElement);
+
+      // Add a small delay to ensure the element is fully rendered
+      setTimeout(() => {
+        // Use html2canvas to render the bib in HD
+        html2canvas(bibElement, {
+          scale: 3, // Increase scale for higher resolution (HD)
+          logging: true, // Enable logging for debugging
+          useCORS: true, // Allow cross-origin images
+          width: 2560, // Set width for HD
+          height: 1812, // Set height for HD
+          scrollX: 0, // Ensure no horizontal scroll
+          scrollY: 0, // Ensure no vertical scroll
+          windowWidth: 2560, // Set window width to match the bib
+          windowHeight: 1812, // Set window height to match the bib
+          x: 0, // Ensure the capture starts from the left edge
+          y: 0, // Ensure the capture starts from the top edge
+          onclone: (clonedDoc) => {
+            // Ensure the cloned element is fully visible
+            const clonedBib = clonedDoc.querySelector('.digital-bib');
+            clonedBib.style.position = 'absolute'; // Ensure it's not fixed
+            clonedBib.style.top = '0';
+            clonedBib.style.left = '0';
+          },
+        })
+          .then((canvas) => {
+            const link = document.createElement('a');
+            link.download = `${name}_Certificate.png`;
+            link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
+            link.click();
+
+            // Remove the bib element from the DOM after saving
+            document.body.removeChild(bibElement);
+          })
+          .catch((error) => {
+            console.error('Error capturing bib image:', error);
+            document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
+          });
+      }, 100); // 100ms delay to ensure the element is fully rendered
+    };
+
     // Toggle Ranking Table Visibility
     document.getElementById('rankingButton').addEventListener('click', function() {
       const rankingTableContainer = document.getElementById('rankingTableContainer');
@@ -769,11 +989,31 @@
       }
     });
 
+    // Toggle Winner List Visibility
+    document.getElementById('winnerListButton').addEventListener('click', function() {
+      const winnerListContainer = document.getElementById('winnerListContainer');
+      const logTableContainer = document.querySelector('.table-container');
+      const rankingTableContainer = document.getElementById('rankingTableContainer');
+
+      if (winnerListContainer.style.display === 'none') {
+        winnerListContainer.style.display = 'block';
+        logTableContainer.style.display = 'none';
+        rankingTableContainer.style.display = 'none';
+        this.textContent = 'Hide Winner List';
+      } else {
+        winnerListContainer.style.display = 'none';
+        logTableContainer.style.display = 'block';
+        this.textContent = 'Show Winner List';
+      }
+    });
+
     // Add event listeners for filtering
     document.getElementById('nameFilter').addEventListener('change', filterTable);
     document.getElementById('contactSearch').addEventListener('input', filterTable);
     document.getElementById('dateFilter').addEventListener('change', filterTable);
     document.getElementById('bibSearch').addEventListener('input', filterRankingTable);
   </script>
+  <!-- Include html2canvas library for saving the bib as an image -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
