@@ -251,10 +251,10 @@
 
     /* Small Bib Image Styles */
     .small-bib {
-      width: 100px;
-      height: 60px;
-      background-image: url('100km challenge(2).png'); /* Add your bib background image */
-      background-size: 100% 100%; /* Stretch the image to fit the container */
+      width: 150px; /* Adjusted for landscape */
+      height: 100px; /* Adjusted for landscape */
+      background-image: url('Roadha Run Certificate 1446.jpeg'); /* Add your bib background image */
+      background-size: cover; /* Ensure the image covers the container */
       background-position: center; /* Center the background image */
       display: flex;
       align-items: center;
@@ -272,8 +272,8 @@
       font-size: 8rem; /* Larger font size for HD */
       font-weight: bold;
       color: #ffd700; /* Gold color */
-      background-image: url('100km challenge(2).png'); /* Add your bib background image */
-      background-size: 100% 100%; /* Stretch the image to fit the container */
+      background-image: url('Roadha Run Certificate 1446.jpeg'); /* Add your bib background image */
+      background-size: cover; /* Ensure the image covers the container */
       background-position: center; /* Center the background image */
       background-repeat: no-repeat; /* Prevent the background image from repeating */
       padding: 1px; /* Larger padding */
@@ -282,9 +282,9 @@
       display: flex;
       flex-direction: column; /* Stack children vertically */
       align-items: center; /* Center children horizontally */
-      justify-content: flex-start; /* Align children to the top */
-      width: 1920px; /* Landscape width for HD */
-      height: 1080px; /* Landscape height for HD */
+      justify-content: center; /* Center children vertically */
+      width: 2560px; /* Landscape width for HD */
+      height: 1812px; /* Landscape height for HD */
       position: absolute; /* Use absolute positioning instead of fixed */
       top: 0; /* Position at the top */
       left: 0; /* Position at the left */
@@ -292,28 +292,14 @@
       overflow: hidden; /* Ensure no overflow */
     }
 
-    /* Topper Name Styles */
-    .topper-name {
-      font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
-      font-size: 4rem; /* Larger font size for topper name */
-      color: #333; /* Dark color for visibility */
-      position: absolute;
-      top: 05%; /* Position the topper name at the center */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-    }
-
     /* Bib Name and Number Styles */
     .bib-info {
       font-family: 'Arial', sans-serif; /* Use a clean font for bib info */
       font-size: 4rem; /* Larger font size for bib info */
-      color: #0e092e; /* Dark color for visibility */
-      position: absolute;
-      top: 35%; /* Position the bib info below the topper name */
-      left: 50%;
-      transform: translateX(-50%);
+      color: #fafafc; /* Dark color for visibility */
       text-align: center;
+      padding-top: 0px; /* Adjust top padding manually */
+      padding-bottom: 400px; /* Adjust bottom padding manually */
     }
 
     /* Save Bib Button */
@@ -537,7 +523,7 @@
 
     <!-- Winner List Section -->
     <div id="winnerListContainer">
-      <h2>Winner List (100 km or more)</h2>
+      <h2>Winner List </h2>
       <div class="table-container">
         <table id="winnerListTable">
           <thead>
@@ -546,8 +532,8 @@
               <th>BIB Number</th>
               <th>Total Distance (km)</th>
               <th>Medals</th>
-              <th>Digital Bib</th>
-              <th>Save Bib</th>
+              <th>Certificate</th>
+              <th>Save</th>
             </tr>
           </thead>
           <tbody>
@@ -886,7 +872,7 @@
           <div class="small-bib" onclick="previewBib('${bibNumber}', '${name}')">${bibNumber}</div>
         </td>
         <td>
-          <button class="save-bib-button" onclick="saveBib('${name}', '${bibNumber}')">Save Bib</button>
+          <button class="save-bib-button" onclick="saveBib('${name}', '${bibNumber}')">Save </button>
         </td>
       `;
     }
@@ -895,12 +881,6 @@
     window.previewBib = function(bibNumber, name) {
       const bibElement = document.createElement('div');
       bibElement.className = 'digital-bib';
-
-      // Add the topper name manually
-      const topperNameElement = document.createElement('div');
-      topperNameElement.className = 'topper-name';
-      topperNameElement.textContent = '1446 qnar adOr'; // Manually add the topper name
-      bibElement.appendChild(topperNameElement);
 
       // Add the bib number and name
       const bibInfoElement = document.createElement('div');
@@ -918,17 +898,17 @@
           scale: 3, // Increase scale for higher resolution (HD)
           logging: true, // Enable logging for debugging
           useCORS: true, // Allow cross-origin images
-          width: 1920, // Set width for HD
-          height: 1080, // Set height for HD
+          width: 2560, // Set width for HD
+          height: 1812, // Set height for HD
           scrollX: 0, // Ensure no horizontal scroll
           scrollY: 0, // Ensure no vertical scroll
-          windowWidth: 1920, // Set window width to match the bib
-          windowHeight: 1080, // Set window height to match the bib
+          windowWidth: 2560, // Set window width to match the bib
+          windowHeight: 1812, // Set window height to match the bib
           x: 0, // Ensure the capture starts from the left edge
           y: 0, // Ensure the capture starts from the top edge
         }).then(canvas => {
           const link = document.createElement('a');
-          link.download = `${bibNumber}_bib.png`;
+          link.download = `${bibNumber}_Certificate.png`;
           link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
           link.click();
 
@@ -942,62 +922,56 @@
     };
 
     window.saveBib = function (name, bibNumber) {
-  const bibElement = document.createElement('div');
-  bibElement.className = 'digital-bib';
+      const bibElement = document.createElement('div');
+      bibElement.className = 'digital-bib';
 
-  // Add the topper name manually
-  const topperNameElement = document.createElement('div');
-  topperNameElement.className = 'topper-name';
-  topperNameElement.textContent = '1446 qnar adOr'; // Manually add the topper name
-  bibElement.appendChild(topperNameElement);
+      // Add the bib number and name
+      const bibInfoElement = document.createElement('div');
+      bibInfoElement.className = 'bib-info';
+      bibInfoElement.textContent = `${bibNumber} - ${name}`; // Add the bib number and name
+      bibElement.appendChild(bibInfoElement);
 
-  // Add the bib number and name
-  const bibInfoElement = document.createElement('div');
-  bibInfoElement.className = 'bib-info';
-  bibInfoElement.textContent = `${bibNumber} - ${name}`; // Add the bib number and name
-  bibElement.appendChild(bibInfoElement);
+      // Append the bib element to the body and make it visible
+      document.body.appendChild(bibElement);
 
-  // Append the bib element to the body and make it visible
-  document.body.appendChild(bibElement);
+      // Add a small delay to ensure the element is fully rendered
+      setTimeout(() => {
+        // Use html2canvas to render the bib in HD
+        html2canvas(bibElement, {
+          scale: 3, // Increase scale for higher resolution (HD)
+          logging: true, // Enable logging for debugging
+          useCORS: true, // Allow cross-origin images
+          width: 2560, // Set width for HD
+          height: 1812, // Set height for HD
+          scrollX: 0, // Ensure no horizontal scroll
+          scrollY: 0, // Ensure no vertical scroll
+          windowWidth: 2560, // Set window width to match the bib
+          windowHeight: 1812, // Set window height to match the bib
+          x: 0, // Ensure the capture starts from the left edge
+          y: 0, // Ensure the capture starts from the top edge
+          onclone: (clonedDoc) => {
+            // Ensure the cloned element is fully visible
+            const clonedBib = clonedDoc.querySelector('.digital-bib');
+            clonedBib.style.position = 'absolute'; // Ensure it's not fixed
+            clonedBib.style.top = '0';
+            clonedBib.style.left = '0';
+          },
+        })
+          .then((canvas) => {
+            const link = document.createElement('a');
+            link.download = `${name}_bib.png`;
+            link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
+            link.click();
 
-  // Add a small delay to ensure the element is fully rendered
-  setTimeout(() => {
-    // Use html2canvas to render the bib in HD
-    html2canvas(bibElement, {
-      scale: 3, // Increase scale for higher resolution (HD)
-      logging: true, // Enable logging for debugging
-      useCORS: true, // Allow cross-origin images
-      width: 1920, // Set width for HD
-      height: 1080, // Set height for HD
-      scrollX: 0, // Ensure no horizontal scroll
-      scrollY: 0, // Ensure no vertical scroll
-      windowWidth: 1920, // Set window width to match the bib
-      windowHeight: 1080, // Set window height to match the bib
-      x: 0, // Ensure the capture starts from the left edge
-      y: 0, // Ensure the capture starts from the top edge
-      onclone: (clonedDoc) => {
-        // Ensure the cloned element is fully visible
-        const clonedBib = clonedDoc.querySelector('.digital-bib');
-        clonedBib.style.position = 'absolute'; // Ensure it's not fixed
-        clonedBib.style.top = '0';
-        clonedBib.style.left = '0';
-      },
-    })
-      .then((canvas) => {
-        const link = document.createElement('a');
-        link.download = `${name}_bib.png`;
-        link.href = canvas.toDataURL('image/png', 1.0); // Save as high-quality PNG
-        link.click();
-
-        // Remove the bib element from the DOM after saving
-        document.body.removeChild(bibElement);
-      })
-      .catch((error) => {
-        console.error('Error capturing bib image:', error);
-        document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
-      });
-  }, 100); // 100ms delay to ensure the element is fully rendered
-};
+            // Remove the bib element from the DOM after saving
+            document.body.removeChild(bibElement);
+          })
+          .catch((error) => {
+            console.error('Error capturing bib image:', error);
+            document.body.removeChild(bibElement); // Ensure the bib element is removed even if there's an error
+          });
+      }, 100); // 100ms delay to ensure the element is fully rendered
+    };
 
     // Toggle Ranking Table Visibility
     document.getElementById('rankingButton').addEventListener('click', function() {
