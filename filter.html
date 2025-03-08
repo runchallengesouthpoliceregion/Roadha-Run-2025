@@ -438,6 +438,34 @@
         font-size: 0.8em;
       }
     }
+
+    /* Show Finisher List Button Animation and Hover Styles */
+    #winnerListButton {
+      background-color: #ff5722; /* Orange background */
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      animation: pulse 2s infinite; /* Pulsating animation */
+    }
+
+    #winnerListButton:hover {
+      background-color: #353231; /* Darker orange on hover */
+      animation: none; /* Stop animation on hover */
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
   </style>
 </head>
 <body>
@@ -474,7 +502,7 @@
       </div>
       <div class="winners-button-container">
         <button id="rankingButton">Show Ranking</button>
-        <button id="winnerListButton">Show Winner List</button> <!-- Button to toggle winner list -->
+        <button id="winnerListButton">Show Finisher List</button> <!-- Button to toggle winner list -->
       </div>
     </div>
     <div class="table-container">
@@ -528,6 +556,7 @@
         <table id="winnerListTable">
           <thead>
             <tr>
+              <th>Rank</th>
               <th>Name</th>
               <th>BIB Number</th>
               <th>Total Distance (km)</th>
@@ -864,6 +893,7 @@
 
       const row = winnerListTable.insertRow();
       row.innerHTML = `
+        <td>${winnerListTable.rows.length}</td> <!-- Rank -->
         <td>${name}</td>
         <td>${bibNumber}</td>
         <td>100 km</td> <!-- Always show 100 km in the winner list -->
@@ -999,11 +1029,11 @@
         winnerListContainer.style.display = 'block';
         logTableContainer.style.display = 'none';
         rankingTableContainer.style.display = 'none';
-        this.textContent = 'Hide Winner List';
+        this.textContent = 'Show Running Log';
       } else {
         winnerListContainer.style.display = 'none';
         logTableContainer.style.display = 'block';
-        this.textContent = 'Show Winner List';
+        this.textContent = 'Show Finisher  List';
       }
     });
 
