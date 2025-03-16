@@ -141,6 +141,16 @@
       color: #ffd700; /* Gold color for selected stars */
     }
 
+    /* Rating Input Styles */
+    .rating-input {
+      width: 50px;
+      padding: 5px;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
     /* Comment Section Styles */
     .comment-section textarea {
       width: 100%;
@@ -299,6 +309,7 @@
             <span class="star" data-rating="4">★</span>
             <span class="star" data-rating="5">★</span>
           </div>
+          <input type="number" class="rating-input" min="1" max="5" placeholder="1-5" oninput="updateStars(this)">
         </td>
         <td>
           <div class="comment-section">
@@ -320,9 +331,34 @@
           for (let i = 0; i < rating; i++) {
             stars[i].classList.add('selected');
           }
+          // Update the input field
+          row.querySelector('.rating-input').value = rating;
         });
       });
     }
+
+    // Function to update stars based on input value
+    window.updateStars = function(input) {
+      const row = input.parentElement.parentElement;
+      const stars = row.querySelectorAll('.star-rating .star');
+      const rating = parseInt(input.value);
+
+      // Validate input
+      if (rating < 1 || rating > 5) {
+        alert('Please enter a rating between 1 and 5.');
+        input.value = '';
+        return;
+      }
+
+      // Update stars
+      stars.forEach((star, index) => {
+        if (index < rating) {
+          star.classList.add('selected');
+        } else {
+          star.classList.remove('selected');
+        }
+      });
+    };
 
     // Function to sort the table by BIB number
     function sortTableByBibNumber() {
@@ -351,7 +387,15 @@
         return;
       }
 
-      const rating = row.querySelector('.star-rating .selected')?.getAttribute('data-rating') || 0;
+      // Get the selected rating
+      const ratingInput = row.querySelector('.rating-input');
+      const rating = parseInt(ratingInput.value);
+
+      // Validate rating
+      if (rating < 1 || rating > 5) {
+        alert('Please enter a valid rating between 1 and 5.');
+        return;
+      }
 
       // Save to Firebase
       const ratingsRef = ref(database, `ratings_comments/${bibNumber}`);
@@ -385,6 +429,10 @@
 
       // Hide the Save button
       row.querySelector('.save-button').classList.add('hidden');
+
+      // Hide the rating input box
+      const ratingInput = row.querySelector('.rating-input');
+      ratingInput.classList.add('hidden');
     }
 
     // Function to filter table by BIB number
