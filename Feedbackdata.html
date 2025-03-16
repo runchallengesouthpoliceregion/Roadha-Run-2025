@@ -96,6 +96,22 @@
       z-index: 1; /* Ensure the header stays above the body */
     }
 
+    /* Star Rating Styles */
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .star-rating .star {
+      font-size: 24px;
+      color: #ccc;
+    }
+
+    .star-rating .star.selected {
+      color: #ffd700; /* Gold color for selected stars */
+    }
+
     /* Delete Button Styles */
     .delete-button {
       background-color: #ff4d4d;
@@ -135,6 +151,7 @@
           <tr>
             <th>Name</th>
             <th>BIB Number</th>
+            <th>Rating</th>
             <th>Comment</th>
             <th class="actions-header hidden">Actions</th> <!-- Hidden by default -->
           </tr>
@@ -184,6 +201,11 @@
           row.innerHTML = `
             <td>${data[bibNumber].name}</td>
             <td>${data[bibNumber].bibNumber}</td>
+            <td>
+              <div class="star-rating">
+                ${generateStars(data[bibNumber].rating)}
+              </div>
+            </td>
             <td>${data[bibNumber].comment}</td>
             <td class="actions-cell hidden">
               <button class="delete-button" onclick="deleteData('${bibNumber}')">Delete</button>
@@ -191,6 +213,19 @@
           `;
         }
       }
+    }
+
+    // Function to generate star rating HTML
+    function generateStars(rating) {
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+          stars += '<span class="star selected">★</span>';
+        } else {
+          stars += '<span class="star">★</span>';
+        }
+      }
+      return stars;
     }
 
     // Function to filter table by BIB Number
