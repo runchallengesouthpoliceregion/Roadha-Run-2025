@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Log Filter</title>
+  <style>
+    /* Load Faruma font */
+    @import url('https://fonts.googleapis.com/css2?family=Faruma&display=swap');
+
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url('6184000488555530013.jpg'); /* Add your image URL */
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-image: url(''); /* Your watermark logo */
+      background-size: 100% 100%; /* Make the image fill the entire container */
+      background-repeat: no-repeat;
+      opacity: 0.1; /* Control the opacity of the watermark */
+      width: 100%; /* Ensure it fits the container */
+      height: 100%; /* Ensure it fits the container */
+      pointer-events: none; /* Ensure it doesn't interfere with clicking elements */
+      z-index: 0;
+
+      /* Animation for zoom effect */
+      animation: zoomInOut 10s infinite ease-in-out;
+    }
+
+    /* Zoom-in and zoom-out animation */
+    @keyframes zoomInOut {
+      0% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @font-face {
+      font-family: 'SameeAvasThaana';
+      src: url('fonts/Samee_Avas_Thaana.ttf'); /* Ensure the font file is in the correct path */
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+      font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
+    }
+
+    /* Search Bar Styles */
+    .search-container {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .search-container input {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    /* Table Styles */
+    .table-container {
+      max-height: 400px; /* Set a fixed height for the table body */
+      overflow-y: auto; /* Enable vertical scrolling */
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    table th {
+      background-color: #f8f9fa; /* Light gray background for header */
+      position: sticky; /* Make the header sticky */
+      top: 0; /* Stick to the top of the container */
+      z-index: 1; /* Ensure the header stays above the body */
+    }
+
+    /* Star Rating Styles */
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .star-rating .star {
+      font-size: 24px;
+      cursor: pointer;
+      color: #ccc;
+    }
+
+    .star-rating .star.selected {
+      color: #ffd700; /* Gold color for selected stars */
+    }
+
+    /* Comment Section Styles */
+    .comment-section textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    .comment-section .saved-comment {
+      display: none; /* Initially hidden */
+      font-size: 14px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    /* Save Button Styles */
+    .save-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .save-button:hover {
+      background-color: #45a049;
+    }
+
+    /* Hidden Section Styles */
+    .hidden {
+      display: none;
+    }
+
+    /* Disabled Star Rating Styles */
+    .star-rating.disabled .star {
+      pointer-events: none; /* Disable clicking on stars */
+    }
+
+    /* Thank You Animation */
+    .thank-you {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: #4CAF50;
+      opacity: 0;
+      animation: blast 2s ease-in-out;
+    }
+
+    @keyframes blast {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(3);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Running Log</h1>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search by BIB Number..." oninput="filterTable()">
+    </div>
+    <div class="table-container">
+      <table id="logTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>BIB Number</th>
+            <th>Rating</th>
+            <th>Comment</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will appear here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+    import { getDatabase, ref, onChildAdded, set, onValue } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyClxIK0xiQh4XGZTgYuRHqq5xNT7iIGYjw",
+      authDomain: "runninglog-f16f7.firebaseapp.com",
+      projectId: "runninglog-f16f7",
+      storageBucket: "runninglog-f16f7.appspot.com",
+      messagingSenderId: "143536384226",
+      appId: "1:143536384226:web:d35c56b74cfd62dc06d6bb",
+      measurementId: "G-2Z7W4TFCZ4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Fetch data from Firebase
+    const runningLogRef = ref(database, 'runningLogs');
+    const ratingsCommentsRef = ref(database, 'ratings_comments');
+    const uniqueBibNumbers = new Set(); // To store unique BIB numbers
+
+    // Fetch running logs
+    onChildAdded(runningLogRef, (snapshot) => {
+      const data = snapshot.val();
+
+      // Check if the BIB number is already displayed
+      if (!uniqueBibNumbers.has(data.bibNumber)) {
+        uniqueBibNumbers.add(data.bibNumber); // Add to the set
+        addRowToTable(data); // Add the row to the table
+        sortTableByBibNumber(); // Sort the table by BIB number
+      }
+    });
+
+    // Fetch ratings and comments
+    onValue(ratingsCommentsRef, (snapshot) => {
+      const ratingsComments = snapshot.val();
+      if (ratingsComments) {
+        Object.keys(ratingsComments).forEach(bibNumber => {
+          const row = document.querySelector(`tr[data-bib="${bibNumber}"]`);
+          if (row) {
+            updateRowAfterSave(row, ratingsComments[bibNumber]);
+          }
+        });
+      }
+    });
+
+    // Function to add a row to the table
+    function addRowToTable(data) {
+      const table = document.getElementById('logTable').getElementsByTagName('tbody')[0];
+      const row = table.insertRow();
+      row.setAttribute('data-bib', data.bibNumber); // Add data-bib attribute for identification
+
+      row.innerHTML = `
+        <td>${data.name}</td>
+        <td>${data.bibNumber}</td>
+        <td>
+          <div class="star-rating">
+            <span class="star" data-rating="1">★</span>
+            <span class="star" data-rating="2">★</span>
+            <span class="star" data-rating="3">★</span>
+            <span class="star" data-rating="4">★</span>
+            <span class="star" data-rating="5">★</span>
+          </div>
+        </td>
+        <td>
+          <div class="comment-section">
+            <textarea placeholder="Write a comment..."></textarea>
+            <div class="saved-comment"></div>
+          </div>
+        </td>
+        <td>
+          <button class="save-button" onclick="saveRatingAndComment('${data.name}', '${data.bibNumber}', this)">Save</button>
+        </td>
+      `;
+
+      // Add event listeners for star rating
+      const stars = row.querySelectorAll('.star-rating .star');
+      stars.forEach(star => {
+        star.addEventListener('click', () => {
+          const rating = star.getAttribute('data-rating');
+          stars.forEach(s => s.classList.remove('selected'));
+          for (let i = 0; i < rating; i++) {
+            stars[i].classList.add('selected');
+          }
+        });
+      });
+    }
+
+    // Function to sort the table by BIB number
+    function sortTableByBibNumber() {
+      const table = document.getElementById('logTable');
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+      rows.sort((a, b) => {
+        const bibA = parseInt(a.getAttribute('data-bib'));
+        const bibB = parseInt(b.getAttribute('data-bib'));
+        return bibA - bibB;
+      });
+
+      // Clear the table and re-add sorted rows
+      table.querySelector('tbody').innerHTML = '';
+      rows.forEach(row => table.querySelector('tbody').appendChild(row));
+    }
+
+    // Function to save rating and comment
+    window.saveRatingAndComment = function(name, bibNumber, button) {
+      const row = button.parentElement.parentElement;
+      const comment = row.querySelector('.comment-section textarea').value;
+
+      // Validate comment
+      if (!comment.trim()) {
+        alert('Please write a comment before saving.');
+        return;
+      }
+
+      const rating = row.querySelector('.star-rating .selected')?.getAttribute('data-rating') || 0;
+
+      // Save to Firebase
+      const ratingsRef = ref(database, `ratings_comments/${bibNumber}`);
+      set(ratingsRef, { name, bibNumber, rating, comment }).then(() => {
+        showThankYouAnimation(); // Show "Thank You!!" animation
+        updateRowAfterSave(row, { rating, comment }); // Update the row after saving
+      }).catch(error => {
+        alert('Error saving data: ' + error);
+      });
+    };
+
+    // Function to update the row after saving
+    function updateRowAfterSave(row, data) {
+      // Freeze the rating stars
+      const stars = row.querySelectorAll('.star-rating .star');
+      stars.forEach((star, index) => {
+        if (index < data.rating) {
+          star.classList.add('selected');
+        }
+      });
+      row.querySelector('.star-rating').classList.add('disabled');
+
+      // Hide the comment textarea and show the saved comment
+      const commentSection = row.querySelector('.comment-section');
+      const textarea = commentSection.querySelector('textarea');
+      const savedComment = commentSection.querySelector('.saved-comment');
+
+      textarea.classList.add('hidden');
+      savedComment.textContent = data.comment;
+      savedComment.style.display = 'block';
+
+      // Hide the Save button
+      row.querySelector('.save-button').classList.add('hidden');
+    }
+
+    // Function to filter table by BIB number
+    function filterTable() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#logTable tbody tr');
+
+      rows.forEach(row => {
+        const bibNumber = row.getAttribute('data-bib').toLowerCase();
+        if (bibNumber.includes(input)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Function to show "Thank You!!" animation
+    function showThankYouAnimation() {
+      const thankYouDiv = document.createElement('div');
+      thankYouDiv.className = 'thank-you';
+      thankYouDiv.textContent = 'Thank You!!';
+      document.body.appendChild(thankYouDiv);
+
+      // Remove the element after animation ends
+      setTimeout(() => {
+        thankYouDiv.remove();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
