@@ -68,6 +68,9 @@
       border-radius: 8px;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center content horizontally */
     }
 
     @font-face {
@@ -81,6 +84,37 @@
       text-align: center;
       color: #333;
       font-family: 'SameeAvasThaana', sans-serif; /* Apply Dhivehi font */
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Outer line animation */
+    h1::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 2px solid #4CAF50;
+      border-radius: 10px;
+      z-index: -1;
+      animation: outerLineZoom 3s infinite ease-in-out;
+    }
+
+    @keyframes outerLineZoom {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     /* Search Bar Styles */
@@ -220,7 +254,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Running Log</h1>
+    <h1>qkebqDIf</h1>
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="Search by BIB Number..." oninput="filterTable()">
     </div>
@@ -436,20 +470,7 @@
     }
 
     // Function to filter table by BIB number
-    function filterTable() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const rows = document.querySelectorAll('#logTable tbody tr');
-
-      rows.forEach(row => {
-        const bibNumber = row.getAttribute('data-bib').toLowerCase();
-        if (bibNumber.includes(input)) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
-      });
-    }
-
+   
     // Function to show "Thank You!!" animation
     function showThankYouAnimation() {
       const thankYouDiv = document.createElement('div');
@@ -461,6 +482,22 @@
       setTimeout(() => {
         thankYouDiv.remove();
       }, 2000);
+    }
+  </script>
+  <script>
+    // Function to filter table by BIB number
+    function filterTable() {
+      const input = document.getElementById('searchInput').value.toLowerCase(); // Get search input value
+      const rows = document.querySelectorAll('#logTable tbody tr'); // Get all table rows
+
+      rows.forEach(row => {
+        const bibNumber = row.getAttribute('data-bib').toLowerCase(); // Get BIB number from data-bib attribute
+        if (bibNumber.includes(input)) {
+          row.style.display = ''; // Show the row if it matches the search
+        } else {
+          row.style.display = 'none'; // Hide the row if it doesn't match
+        }
+      });
     }
   </script>
 </body>
