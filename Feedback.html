@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Running Log Filter</title>
+  <title>Running Log FeedBack</title>
   <style>
     /* Load Faruma font */
     @import url('https://fonts.googleapis.com/css2?family=Faruma&display=swap');
@@ -250,10 +250,58 @@
         transform: translate(-50%, -50%) scale(3);
       }
     }
+    
+    /* Navigation Button Styles */
+    .nav-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    
+    .nav-button:hover {
+      background-color: #45a049;
+    }
+    
+    /* Iframe Styles */
+    #otherPageFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+    }
+    
+    /* Back Button Styles */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 10;
+      display: none;
+    }
+    
+    .back-button:hover {
+      background-color: #d32f2f;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <button class="nav-button" id="openOtherPage">Comment</button>
+  <button class="back-button" id="backButton">Back to Table</button>
+  
+  <div class="container" id="mainContainer">
     <h1>qkebqDIf</h1>
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="Search by BIB Number..." oninput="filterTable()">
@@ -275,6 +323,8 @@
       </table>
     </div>
   </div>
+
+  <iframe id="otherPageFrame" src="" frameborder="0"></iframe>
 
   <!-- Firebase SDK -->
   <script type="module">
@@ -469,8 +519,6 @@
       ratingInput.classList.add('hidden');
     }
 
-    // Function to filter table by BIB number
-   
     // Function to show "Thank You!!" animation
     function showThankYouAnimation() {
       const thankYouDiv = document.createElement('div');
@@ -499,6 +547,35 @@
         }
       });
     }
+
+    // Navigation functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const openOtherPageBtn = document.getElementById('openOtherPage');
+      const backButton = document.getElementById('backButton');
+      const mainContainer = document.getElementById('mainContainer');
+      const otherPageFrame = document.getElementById('otherPageFrame');
+      
+      // Set the URL of the other HTML file you want to open
+      const otherPageUrl = 'Feedbackdata.html'; // Change this to your actual file name
+      
+      // Button to open the other page
+      openOtherPageBtn.addEventListener('click', function() {
+        mainContainer.style.display = 'none';
+        otherPageFrame.style.display = 'block';
+        otherPageFrame.src = otherPageUrl;
+        openOtherPageBtn.style.display = 'none';
+        backButton.style.display = 'block';
+      });
+      
+      // Button to go back to the table
+      backButton.addEventListener('click', function() {
+        mainContainer.style.display = 'flex';
+        otherPageFrame.style.display = 'none';
+        otherPageFrame.src = '';
+        openOtherPageBtn.style.display = 'block';
+        backButton.style.display = 'none';
+      });
+    });
   </script>
 </body>
 </html>
