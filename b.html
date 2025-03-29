@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoadhaRun-South Police Region</title>
+    <style>
+        /* Body styling with animated background */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('6184000488555530013.jpg'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            animation: backgroundAnimation 10s infinite alternate;
+        }
+
+        /* Container styling */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+            position: relative;
+        }
+
+        /* Header styling */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #777;
+        }
+
+        /* Buttons styling */
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #564cc0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'SameeAvasThaana', sans-serif; /* Apply custom font */
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:active {
+            background-color: #003f7f;
+            transform: translateY(0);
+        }
+
+        /* Selected button styling */
+        .button.selected {
+            background-color: #777; /* Gray color for selected button */
+        }
+
+        .buttonF {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #106b50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'SameeAvasThaana', sans-serif; /* Apply custom font */
+        }
+        .buttonF:hover {
+            background-color: #b38300;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+
+        /* Iframe styling */
+        iframe {
+            width: 100%;
+            height: 900px;
+            border: none;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Logo styling */
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 150px;
+            height: auto;
+            animation: zoomInOut 3s infinite alternate;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        /* Logo zoom in and out animation */
+        @keyframes zoomInOut {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* Custom font for the header */
+        @font-face {
+            font-family: 'SameeAvasThaana';
+            src: url('fonts/Samee_Avas_Thaana.ttf'); /* Path to your font file */
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+            font-family: 'SameeAvasThaana', sans-serif; /* Apply custom font */
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-image: url('LOGO JERSY.png'); /* Replace with your image path */
+            background-size: cover; /* Ensures the image covers the entire div */
+            background-position: center; /* Centers the image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            position: fixed;
+            top: 0;
+            left: -250px; /* Hide sidebar by default */
+            transition: left 0.3s ease;
+            z-index: 1000;
+            opacity: 0.9; /* Adjust opacity (0.0 to 1.0) */
+            animation: zoomBackground 10s infinite alternate; /* Zoom in and out animation */
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for better text visibility */
+            z-index: -1;
+        }
+
+        /* Zoom in and out animation */
+        @keyframes zoomBackground {
+            0% {
+                background-size: 500% auto; /* Start with normal size */
+            }
+            100% {
+                background-size: 200% auto; /* Zoom in to 120% */
+            }
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            padding-top: 60px; /* Space for the close button */
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #564cc0;
+        }
+
+        /* Close button styling */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #564cc0;
+        }
+
+        /* Open button styling */
+        .open-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #564cc0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .open-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Show sidebar when active */
+        .sidebar.active {
+            left: 0;
+        }
+
+        /* Search bar styling */
+        .search-bar {
+            padding: 10px;
+            margin: 20px 10px;
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* Digital Bib styling */
+        .bib-container {
+            display: none; /* Hidden by default */
+            text-align: center;
+            background-color: #343247; /* Fallback background color */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(50, 49, 49, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden; /* Ensure the pseudo-element doesn't overflow */
+        }
+
+        .bib-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('LOGO JERSY.png'); /* Add your background image URL */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4; /* Set opacity for the background image */
+            z-index: 1; /* Place it behind the content */
+        }
+
+        .bib-container > * {
+            position: relative;
+            z-index: 2; /* Ensure content is above the background image */
+        }
+
+        .bib-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #f7f7f7;
+            margin-bottom: 10px;
+        }
+
+        .bib-number {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #f7f7f7;
+            margin: 30px 0;
+        }
+
+        .bib-nickname {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f7f7f7;
+            margin: 20px 0;
+        }
+
+        .bib-event {
+            font-size: 1.5rem;
+            color: #f7f7f7;
+            margin: 20px 0;
+            font-family: 'SameeAvasThaana', sans-serif;
+        }
+
+        .bib-logos {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .bib-logos img {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Logo container styling */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* Align logo and text to the right */
+            margin-top: 20px;
+            position: absolute; /* Position absolutely */
+            top: 20px; /* Adjust top position */
+            right: 20px; /* Align to the right */
+        }
+
+        /* WE BLUES text styling */
+        .we-blues {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #f7f7f7;
+            margin-top: 5px; /* Reduce space between logo and text */
+            text-align: right; /* Align text to the right */
+        }
+
+        /* SOUTH POLICE REGION text styling */
+        .south-police-region {
+            font-size: 0.9rem;
+            color: #f7f7f7;
+            text-align: right; /* Align text to the right */
+            position: absolute;
+            bottom: 10px; /* Position at the bottom */
+            right: 20px; /* Align to the right */
+        }
+
+        /* Admin buttons styling */
+        .admin-buttons {
+            display: none; /* Hidden by default */
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .admin-buttons button {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #28a745; /* Green color for admin buttons */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-buttons button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-buttons button:active {
+            background-color: #1e7e34; /* Even darker green on active */
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="close-btn" id="closeBtn">×</button>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#" id="adminButton">Admin</a></li> <!-- Admin button -->
+            <li>
+                <a href="#"></a>
+                <button class="button" onclick="loadContent('roadha run 1446.pdf')">udiwAvaQ</button>
+            </li>
+        </ul>
+
+        <!-- Digital BIB Finder Text -->
+        <h3 style="text-align: center; font-weight: bold; color: white; margin: 20px 0 10px 0;">Digital BIB Finder</h3>
+
+        <!-- Search bar -->
+        <input type="text" class="search-bar" id="searchBar" placeholder="Enter contact number">
+
+        <!-- Digital Bib Display inside sidebar -->
+        <div class="bib-container" id="sidebarBibContainer">
+            <div class="bib-header">DIGITAL BIB</div>
+            <div class="bib-number" id="sidebarBibNumber"></div>
+            <div class="bib-nickname" id="sidebarBibNickname"></div>
+            <div class="bib-event">1446 qnar adOr</div>
+            <div class="bib-logos">
+                <div class="logo-container">
+                    <img src="LOGO JERSY.png" alt="Logo 1">
+                    <div class="we-blues">WE BLUES</div>
+                </div>
+            </div>
+            <div class="south-police-region">SOUTH POLICE REGION</div>
+        </div>
+    </div>
+
+    <!-- Open Sidebar Button -->
+    <button class="open-btn" id="openBtn">☰</button>
+
+    <div class="container">
+        <!-- Logo on the right side -->
+        <img src="LOGO JERSY.png" alt="Logo" class="logo" id="logo">
+
+        <!-- Header for the screenshot page -->
+        <div class="header" id="screenshotHeader" style="display: none;">
+            <h1>qgol qnar adOr</h1>
+        </div>
+
+        <!-- Admin buttons container -->
+        <div class="admin-buttons" id="adminButtons">
+            <button class="button" onclick="loadContent('registerdata.html')">raTqsijer</button>
+            <button class="button" onclick="loadContent('entryData.html')">qnar IliweD</button>
+            <button class="button" id="dailyEntryButton" onclick="selectButton(this); loadContent('entrys.html')">IrqTqnew</button>
+            <button class="button" onclick="loadContent('imageEnter.html')" style="display: none;">IrqTqnnew OTof</button> <!-- Hidden button -->
+        </div>
+
+        <!-- Buttons container -->
+        <div class="buttons" id="buttonsContainer">
+            <button class="button" id="registerButton" onclick="selectButton(this); loadContent('Registers.html')">raTqsijer - qbib</button>
+            <button class="button" id="runningLogButton" onclick="selectButton(this); loadContent('filter.html')">qgol qninar</button>
+            <button class="buttonF" id="runningLogButton" onclick="selectButton(this); loadContent('Feedback.html')">qkebqDIf</button>
+            <button class="button" id="testButton" style="display: none;">qgol OTof</button> <!-- Hidden button -->
+        </div>
+
+        <iframe id="iframeContent" src="" style="display: none;"></iframe>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
+            authDomain: "run-challenge-3cd7b.firebaseapp.com",
+            databaseURL: "https://run-challenge-3cd7b-default-rtdb.firebaseio.com",
+            projectId: "run-challenge-3cd7b",
+            storageBucket: "run-challenge-3cd7b.firebasestorage.app",
+            messagingSenderId: "1009826150691",
+            appId: "1:1009826150691:web:2fe9bed895b701a75f3496",
+            measurementId: "G-TJYBERMRRT"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Function to load content into iframe
+        function loadContent(page) {
+            const iframe = document.getElementById('iframeContent');
+            iframe.style.display = 'block';
+            iframe.src = page;
+        }
+
+        // Function to hide all buttons
+        function hideAllButtons() {
+            const buttonsContainer = document.getElementById('buttonsContainer');
+            buttonsContainer.style.display = 'none';
+        }
+
+        // Function to highlight the selected button
+        function selectButton(selectedButton) {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => {
+                button.classList.remove('selected');
+            });
+            selectedButton.classList.add('selected');
+        }
+
+        // Admin button click event
+        document.getElementById('adminButton').addEventListener('click', function() {
+            const password = prompt('Enter password:');
+            if (password === '8555') {
+                // Show admin buttons (including the dailyEntryButton)
+                document.getElementById('adminButtons').style.display = 'flex';
+
+                // Hide the other buttons
+                document.getElementById('buttonsContainer').style.display = 'none';
+
+                // Hide the logo
+                document.getElementById('logo').style.display = 'none';
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+
+        // Function to search for Bib by contact number automatically
+        document.getElementById('searchBar').addEventListener('input', function() {
+            const contactNumber = this.value;
+            if (contactNumber) {
+                database.ref('participants').orderByChild('contact').equalTo(contactNumber).once('value', snapshot => {
+                    if (snapshot.exists()) {
+                        const data = Object.values(snapshot.val())[0];
+                        displaySidebarBib(data); // Display bib inside sidebar
+                    } else {
+                        hideBib(); // Hide bib if no data found
+                    }
+                });
+            } else {
+                hideBib(); // Hide bib if search bar is empty
+            }
+        });
+
+        // Function to display Bib information inside sidebar
+        function displaySidebarBib(data) {
+            const sidebarBibContainer = document.getElementById('sidebarBibContainer');
+            const sidebarBibNumber = document.getElementById('sidebarBibNumber');
+            const sidebarBibNickname = document.getElementById('sidebarBibNickname');
+
+            sidebarBibNumber.textContent = data.bibNumber || 'N/A';
+            sidebarBibNickname.textContent = data.nickName || 'N/A';
+            sidebarBibContainer.style.display = 'block';
+        }
+
+        // Function to hide Bib information
+        function hideBib() {
+            document.getElementById('sidebarBibContainer').style.display = 'none';
+        }
+
+        // Logo click event
+        document.getElementById('logo').addEventListener('click', function() {
+            hideAllButtons();
+            this.style.animation = 'zoomInOut 1s forwards';
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = function(event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageBase64 = e.target.result;
+                    const text = prompt('Enter image description:');
+                    const contactNumber = prompt('Enter contact number:');
+                    if (text && contactNumber) {
+                        saveDataToFirebase(imageBase64, text, contactNumber);
+                    } else {
+                        alert('Please enter both image description and contact number.');
+                    }
+                };
+                reader.readAsDataURL(file);
+            };
+            fileInput.click();
+        });
+
+        // Screenshot button click event
+        document.getElementById('testButton').addEventListener('click', function() {
+            hideAllButtons();
+            const screenshotHeader = document.getElementById('screenshotHeader');
+            screenshotHeader.style.display = 'block';
+            loadContent('images.html');
+        });
+
+        // Sidebar functionality
+        const sidebar = document.getElementById('sidebar');
+        const openBtn = document.getElementById('openBtn');
+        const closeBtn = document.getElementById('closeBtn');
+
+        openBtn.addEventListener('click', function() {
+            sidebar.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
