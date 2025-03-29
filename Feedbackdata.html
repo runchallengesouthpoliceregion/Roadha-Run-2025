@@ -2,124 +2,142 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Feedback</title>
   <style>
-    /* General Styles */
+    /* Mobile-first styles */
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #f4f7fa;
       margin: 0;
       padding: 0;
-      background-image: url('6184000488555530013.jpg'); /* Add your image URL */
+      background-image: url('6184000488555530013.jpg');
       background-size: cover;
       background-position: center;
-      position: relative;
-      overflow: hidden;
+      background-attachment: fixed;
     }
 
     .container {
       width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      position: relative;
+      margin: 0;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      min-height: 100vh;
+      box-sizing: border-box;
     }
 
     h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
+      font-size: 1.8rem;
+      margin: 10px 0;
       text-align: center;
       color: #333;
     }
 
-    /* Admin Button Styles - Updated to right side */
+    /* Admin Button */
     .admin-button {
       position: fixed;
-      top: 20px;
-      right: 20px; /* Changed from left to right */
+      top: 10px;
+      right: 10px;
       background-color: #4CAF50;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 8px 15px;
       border-radius: 4px;
       cursor: pointer;
-      z-index: 1000; /* Ensure it's above other elements */
+      z-index: 1000;
+      font-size: 0.9rem;
     }
 
-    .admin-button:hover {
-      background-color: #45a049;
+    /* Search Box */
+    .search-box {
+      margin: 10px 0;
+      width: 100%;
     }
 
-    /* Search Bar Styles */
-    .search-container {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .search-container input {
-      width: 300px;
-      padding: 10px;
-      font-size: 16px;
+    .search-box input {
+      width: calc(100% - 20px);
+      padding: 8px 10px;
+      font-size: 1rem;
       border: 1px solid #ddd;
       border-radius: 4px;
+      margin: 0 auto;
+      display: block;
     }
 
-    /* Table Styles */
+    /* Table Container */
     .table-container {
-      max-height: 80vh; /* Set a fixed height for the table body */
-      overflow-y: auto; /* Enable vertical scrolling */
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 10px;
       border: 1px solid #ddd;
       border-radius: 4px;
-      margin-top: 20px;
-      background-color: white; /* White background for the table */
+      background-color: white;
+      max-height: calc(100vh - 200px);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      font-size: 0.9rem;
     }
 
     table th, table td {
-      padding: 12px;
+      padding: 8px;
       text-align: center;
       border: 1px solid #ddd;
+      word-break: break-word;
     }
 
     table th {
-      background-color: #f8f9fa; /* Light gray background for header */
-      position: sticky; /* Make the header sticky */
-      top: 0; /* Stick to the top of the container */
-      z-index: 1; /* Ensure the header stays above the body */
+      background-color: #f8f9fa;
+      position: sticky;
+      top: 0;
     }
 
-    /* Star Rating Styles */
+    /* Star Rating */
     .star-rating {
       color: gold;
-      font-size: 20px;
+      font-size: 1rem;
+      white-space: nowrap;
     }
-    .admin-button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+
+    /* Action Buttons */
     .hidden {
       display: none;
     }
+
     .no-results {
       text-align: center;
       padding: 20px;
       color: #666;
       font-style: italic;
+    }
+
+    /* Delete Button */
+    .delete-btn {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      table th, table td {
+        padding: 6px 4px;
+        font-size: 0.8rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .admin-button {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -130,23 +148,25 @@
     <h1>Runner Feedback</h1>
     
     <div class="search-box">
-      <input type="text" id="bibSearch" placeholder="Enter BIB Number to search..." autofocus>
+      <input type="text" id="bibSearch" placeholder="Enter BIB Number..." autofocus>
     </div>
     
-    <table id="feedbackTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>BIB Number</th>
-          <th>Rating</th>
-          <th>Comment</th>
-          <th class="actions-header hidden">Action</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <!-- Data will load here -->
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table id="feedbackTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>BIB</th>
+            <th>Rating</th>
+            <th>Comment</th>
+            <th class="actions-header hidden">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Data will load here -->
+        </tbody>
+      </table>
+    </div>
     <div id="noResults" class="no-results hidden">No matching results found</div>
   </div>
 
@@ -197,7 +217,7 @@
           <td class="star-rating">${'★'.repeat(item.rating)}${'☆'.repeat(5-item.rating)}</td>
           <td>${item.comment || 'No comment'}</td>
           <td class="actions-cell hidden">
-            <button onclick="deleteEntry('${key}')" style="background:red;color:white;border:none;padding:5px 10px;border-radius:3px;">Delete</button>
+            <button class="delete-btn" onclick="deleteEntry('${key}')">Delete</button>
           </td>
         `;
         
