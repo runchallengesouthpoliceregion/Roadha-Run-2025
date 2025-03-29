@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Running Log and Ratings</title>
+  <title>Feedback</title>
   <style>
     /* General Styles */
     body {
@@ -36,11 +36,11 @@
       color: #333;
     }
 
-    /* Admin Button Styles */
+    /* Admin Button Styles - Updated to right side */
     .admin-button {
       position: fixed;
       top: 20px;
-      left: 20px;
+      right: 20px; /* Changed from left to right */
       background-color: #4CAF50;
       color: white;
       border: none;
@@ -133,11 +133,11 @@
   </style>
 </head>
 <body>
-  <!-- Admin Button -->
+  <!-- Admin Button - Now on the right side -->
   <button class="admin-button" onclick="showAdminActions()">Admin</button>
 
   <div class="container">
-    <h1>Running Log</h1>
+    
 
     <!-- Search Bar -->
     <div class="search-container">
@@ -263,9 +263,11 @@
       if (password === '8555') {
         // Show the Actions column and buttons
         document.querySelector('.actions-header').classList.remove('hidden');
-        document.querySelectorAll('.actions-cell').forEach(cell => {
+        const actionCells = document.querySelectorAll('.actions-cell');
+        actionCells.forEach(cell => {
           cell.classList.remove('hidden');
         });
+        alert('Admin mode activated. Delete buttons are now visible.');
       } else {
         alert('Incorrect password!');
       }
