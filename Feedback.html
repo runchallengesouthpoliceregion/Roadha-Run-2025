@@ -295,16 +295,52 @@
     .back-button:hover {
       background-color: #d32f2f;
     }
+  /* Feedback Prompt Styles */
+.feedback-prompt {
+  margin: 15px 0;
+  text-align: center;
+  max-width: 800px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #5f49c0;
+  animation: fadeIn 1s ease-in-out;
+  transform-origin: top;
+}
+
+.feedback-prompt p {
+  font-weight: 700; /* Extra bold */
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1.5;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   </style>
 </head>
 <body>
-  <button class="nav-button" id="openOtherPage">Comment</button>
+  <button class="nav-button" id="openOtherPage">Comments</button>
   <button class="back-button" id="backButton">Back to Table</button>
   
   <div class="container" id="mainContainer">
     <h1>qkebqDIf</h1>
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="Search by BIB Number..." oninput="filterTable()">
+    </div>
+    <div class="feedback-prompt">
+      <p>We'd love to hear from you! How was your experience with the Roadha Run Challenge? Your feedback helps us improve and make the next run even better. Share your thoughts! ⭐</p>
     </div>
     <div class="table-container">
       <table id="logTable">
