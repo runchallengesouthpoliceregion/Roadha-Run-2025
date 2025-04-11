@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramazan 100K Running Challenge 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            background-image: url('6184000488555530013.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @font-face {
+            font-family: 'SameeAvasThaana';
+            src: url(fonts/Samee_Avas_Thaana.ttf);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+            font-family: 'SameeAvasThaana', sans-serif;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('6184000488555530013.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+            animation: zoomInOut 10s infinite ease-in-out;
+        }
+
+        @keyframes zoomInOut {
+            0% {
+                transform: scale(0.8);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(0.8);
+            }
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #5053e6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'SameeAvasThaana', sans-serif;
+        }
+
+        button:hover {
+            background-color: #707172;
+        }
+
+        /* Maldivian Money Style Voucher */
+        .bib-container {
+            display: none;
+            margin: 20px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f4e5 0%, #e8e4d5 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid #d4af37;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .bib-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 200px 200px;
+            background-repeat: repeat;
+            z-index: 1;
+        }
+
+        .bib-container::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: 80px;
+            background-repeat: no-repeat;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .bib-container > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .bib-header {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+            display: inline-block;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .congratulations {
+            font-size: 1.2rem;
+            color: #5053e6;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .bib-number {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin: 20px 0 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .bib-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .bib-nickname {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0 20px;
+            padding: 10px;
+            background-color: rgba(80, 83, 230, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .bib-event {
+            font-size: 1.5rem;
+            color: #666;
+            margin: 20px 0;
+            font-family: 'SameeAvasThaana', sans-serif;
+            font-weight: bold;
+        }
+
+        .bib-details {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 15px;
+            background-color: rgba(212, 175, 55, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .detail-item {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .bib-footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #777;
+            font-style: italic;
+            text-align: left;
+            line-height: 1.6;
+            position: relative;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            background-image: url('MDV_P030_B220_500_RUF-xs.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 250px;
+        }
+
+        .bib-value-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 3;
+        }
+
+        .bib-value-amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .bib-value-image {
+            width: 80px;
+            height: auto;
+            opacity: 0.7;
+            mix-blend-mode: multiply;
+        }
+
+        .bib-logos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #d4af37;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bib-logos img {
+            height: 10px;
+            width: auto;
+        }
+
+        .we-blues {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #5053e6;
+        }
+
+        .south-police-region {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #777;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .voucher-corner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #d4af37;
+        }
+
+        .top-left {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 15px 0 0 0;
+        }
+
+        .top-right {
+            top: -2px;
+            right: -2px;
+            border-left: none;
+            border-bottom: none;
+            border-radius: 0 15px 0 0;
+        }
+
+        .bottom-left {
+            bottom: -2px;
+            left: -2px;
+            border-right: none;
+            border-top: none;
+            border-radius: 0 0 0 15px;
+        }
+
+        .bottom-right {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 15px 0;
+        }
+
+        .security-strip {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: repeating-linear-gradient(
+                to right,
+                transparent,
+                transparent 20px,
+                #d4af37 20px,
+                #d4af37 40px
+            );
+            transform: translateY(-50%);
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        /* Participants Table Styles */
+        .table-container {
+            display: none; /* Hidden by default */
+            max-height: 500px;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background-color: #5053e6;
+            color: white;
+            z-index: 2;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #5053e6;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        #totalDataCount {
+            display: none; /* Hidden by default */
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        #totalDataCount:hover {
+            color: #5053e6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit-btn, .delete-btn, .export-pdf-btn, .edit-nickname-btn, .edit-contact-btn, .view-bib-btn {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .view-bib-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .view-bib-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #e53935;
+        }
+
+        .export-pdf-btn {
+            display: none; /* Hidden by default */
+            background-color: #2196F3;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .export-pdf-btn:hover {
+            background-color: #1e88e5;
+        }
+
+        .edit-nickname-btn {
+            background-color: #FFC107;
+            color: black;
+        }
+
+        .edit-nickname-btn:hover {
+            background-color: #e0a800;
+        }
+
+        .edit-contact-btn {
+            background-color: #9C27B0;
+            color: white;
+        }
+
+        .edit-contact-btn:hover {
+            background-color: #7B1FA2;
+        }
+
+        /* Modal for editing Nick Name and Contact */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .modal-content button.confirm {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .modal-content button.cancel {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Full-screen mode */
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .fullscreen .bib-container {
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #5053e6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Admin controls */
+        .admin-controls {
+            display: none; /* Hidden by default */
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .admin-toggle {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .bib-number {
+                font-size: 3rem;
+            }
+            
+            .bib-nickname, .bib-name {
+                font-size: 1.5rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .bib-details {
+                flex-direction: column;
+            }
+            
+            .detail-item {
+                margin-bottom: 15px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 3px;
+            }
+            
+            .bib-value-image {
+                width: 60px;
+            }
+            
+            .bib-value-amount {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2025 qnar adOr</h1>
+
+        <!-- Admin Controls -->
+        <div class="admin-controls" id="adminControls">
+            <button class="admin-toggle" id="hideAdminBtn">Hide Admin</button>
+            <div id="totalDataCount">Total Participants: 0</div>
+        </div>
+
+        <!-- Search and View Controls -->
+        <div class="search-container">
+            <input type="text" id="searchBar" class="search-input" placeholder="Enter Bib Number">
+            <button id="searchButton">raTqnew</button>
+            <button id="adminToggleBtn" class="admin-toggle">qnimqDew</button>
+        </div>
+
+        <!-- Digital Bib Display - Maldivian Money Style -->
+        <div class="bib-container" id="bibContainer">
+            <div class="voucher-corner top-left"></div>
+            <div class="voucher-corner top-right"></div>
+            <div class="voucher-corner bottom-left"></div>
+            <div class="voucher-corner bottom-right"></div>
+            <div class="security-strip"></div>
+            
+            <div class="bib-header">RUNNING CHALLENGE VOUCHER</div>
+            <div class="congratulations">Congratulations!</div>
+            <div class="bib-number" id="bibNumber"></div>
+            <div class="bib-name" id="bibName"></div>
+            <div class="bib-nickname" id="bibNickname"></div>
+            <div class="bib-event">1446 qnar adOr</div>
+            
+            <div class="bib-details">
+                <div class="detail-item">
+                    <div class="detail-label">BIB NUMBER</div>
+                    <div class="detail-value" id="detailBibNumber"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">DATE ISSUED</div>
+                    <div class="detail-value" id="detailDate"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">STATUS</div>
+                    <div class="detail-value">100km Complete</div>
+                </div>
+            </div>
+            
+            <div class="bib-footer">
+                <div class="bib-value-container">
+                    <span class="bib-value-amount"></span>
+                    <img src="">
+                </div>
+            </div>
+            
+            <div class="bib-logos">
+                <div class="logo-container">
+                    <img src="IMG_20250228_222427_743.jpg" alt="Event Logo">
+                    <div class="we-blues">WE BLUES</div>
+                </div>
+                <div class="south-police-region">SOUTH POLICE REGION</div>
+            </div>
+        </div>
+
+        <!-- Participants List Section (Hidden by default) -->
+        <div class="table-container" id="tableContainer">
+            <table id="participantsTable">
+                <thead>
+                    <tr>
+                        <th>Bib Number</th>
+                        <th>Full Name</th>
+                        <th>Nick Name</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Export to PDF Button (Hidden by default) -->
+        <button class="export-pdf-btn" id="exportPdfBtn">Export to PDF</button>
+    </div>
+
+    <!-- Modal for editing Nick Name -->
+    <div class="modal" id="editNickNameModal">
+        <div class="modal-content">
+            <h3>Edit Nick Name</h3>
+            <input type="text" id="editNickNameInput" placeholder="Enter new Nick Name">
+            <button class="confirm" id="confirmEditNickName">Save</button>
+            <button class="cancel" id="cancelEditNickName">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal for editing Contact -->
+    <div class="modal" id="editContactModal">
+        <div class="modal-content">
+            <h3>Edit Contact</h3>
+            <input type="text" id="editContactInput" placeholder="Enter new Contact">
+            <button class="confirm" id="confirmEditContact">Save</button>
+            <button class="cancel" id="cancelEditContact">Cancel</button>
+        </div>
+    </div>
+
+    <button class="fullscreen-btn" id="fullscreenBtn">⛶</button>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyANLfgYIxslDsHwpJhShQQFsevltUPBEbY",
+            authDomain: "run-challenge-3cd7b.firebaseapp.com",
+            databaseURL: "https://run-challenge-3cd7b-default-rtdb.firebaseio.com",
+            projectId: "run-challenge-3cd7b",
+            storageBucket: "run-challenge-3cd7b.firebasestorage.app",
+            messagingSenderId: "1009826150691",
+            appId: "1:1009826150691:web:2fe9bed895b701a75f3496",
+            measurementId: "G-TJYBERMRRT"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Function to fetch and display data in ascending order of Bib Number
+        function fetchData() {
+            database.ref('participants').orderByChild('bibNumber').on('value', function(snapshot) {
+                const data = snapshot.val();
+                const dataBody = document.getElementById("dataBody");
+                dataBody.innerHTML = '';
+                if (data) {
+                    // Convert object to array and sort by bibNumber
+                    const participantsArray = Object.entries(data).map(([fullName, participant]) => ({
+                        fullName,
+                        ...participant
+                    }));
+                    participantsArray.sort((a, b) => a.bibNumber - b.bibNumber); // Sort by bibNumber
+
+                    // Display sorted data
+                    participantsArray.forEach(participant => {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td>${participant.bibNumber}</td>
+                            <td>${participant.fullName}</td>
+                            <td>${participant.nickName || '-'}</td>
+                            <td>${participant.contact || '-'}</td>
+                            <td class="action-buttons">
+                                <button class="view-bib-btn" data-bib="${participant.bibNumber}" data-name="${participant.fullName}" data-nickname="${participant.nickName || ''}">View Bib</button>
+                                <button class="edit-nickname-btn" data-id="${participant.fullName}">Edit Nick</button>
+                                <button class="edit-contact-btn" data-id="${participant.fullName}">Edit Contact</button>
+                                <button class="delete-btn" data-id="${participant.fullName}">Delete</button>
+                            </td>
+                        `;
+                        dataBody.appendChild(newRow);
+                    });
+                }
+                updateTotalCount();
+            });
+        }
+
+        // Function to update total count
+        function updateTotalCount() {
+            database.ref('participants').once('value', function(snapshot) {
+                const totalCount = snapshot.numChildren();
+                document.getElementById("totalDataCount").textContent = `Total Participants: ${totalCount}`;
+            });
+        }
+
+        // Function to display bib voucher
+        function displayBib(bibNumber, fullName, nickName) {
+            document.getElementById("bibNumber").textContent = bibNumber;
+            document.getElementById("bibName").textContent = fullName;
+            document.getElementById("bibNickname").textContent = nickName || "Participant";
+            document.getElementById("detailBibNumber").textContent = bibNumber;
+            document.getElementById("detailDate").textContent = new Date().toLocaleDateString();
+            
+            const bibContainer = document.getElementById("bibContainer");
+            bibContainer.style.display = "block";
+            bibContainer.classList.add("bib-zoom-animation");
+            
+            setTimeout(() => {
+                bibContainer.classList.remove("bib-zoom-animation");
+            }, 500);
+        }
+
+        // Function to delete a participant (with password protection)
+        function deleteParticipant(fullName) {
+            const password = prompt("Enter password to delete:");
+            if (password === "8555") {
+                if (confirm("Are you sure you want to delete this participant?")) {
+                    database.ref('participants/' + fullName).remove();
+                    fetchData(); // Refresh the table
+                }
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+
+        // Function to edit Nick Name (with password protection)
+        let currentParticipant = null;
+
+        function openEditNickNameModal(fullName) {
+            const password = prompt("Enter password to edit:");
+            if (password === "8555") {
+                currentParticipant = fullName;
+                const modal = document.getElementById("editNickNameModal");
+                modal.style.display = "flex";
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+
+        function closeEditNickNameModal() {
+            const modal = document.getElementById("editNickNameModal");
+            modal.style.display = "none";
+            currentParticipant = null;
+        }
+
+        function saveNickName() {
+            const newNickName = document.getElementById("editNickNameInput").value;
+            if (newNickName && currentParticipant) {
+                database.ref('participants/' + currentParticipant).update({
+                    nickName: newNickName
+                }).then(() => {
+                    alert("Nick Name updated successfully!");
+                    fetchData(); // Refresh the table
+                    closeEditNickNameModal();
+                }).catch(error => {
+                    alert("Error updating Nick Name: " + error.message);
+                });
+            }
+        }
+
+        // Function to edit Contact (with password protection)
+        function openEditContactModal(fullName) {
+            const password = prompt("Enter password to edit:");
+            if (password === "8555") {
+                currentParticipant = fullName;
+                const modal = document.getElementById("editContactModal");
+                modal.style.display = "flex";
+            } else {
+                alert("Incorrect password!");
+            }
+        }
+
+        function closeEditContactModal() {
+            const modal = document.getElementById("editContactModal");
+            modal.style.display = "none";
+            currentParticipant = null;
+        }
+
+        function saveContact() {
+            const newContact = document.getElementById("editContactInput").value;
+            if (newContact && currentParticipant) {
+                database.ref('participants/' + currentParticipant).update({
+                    contact: newContact
+                }).then(() => {
+                    alert("Contact updated successfully!");
+                    fetchData(); // Refresh the table
+                    closeEditContactModal();
+                }).catch(error => {
+                    alert("Error updating Contact: " + error.message);
+                });
+            }
+        }
+
+        // Function to search participants by bib number
+        function searchByBibNumber() {
+            const bibNumber = document.getElementById("searchBar").value.trim();
+            if (!bibNumber) {
+                alert("Please enter a bib number");
+                return;
+            }
+
+            database.ref('participants').orderByChild('bibNumber').equalTo(parseInt(bibNumber)).once('value', function(snapshot) {
+                const data = snapshot.val();
+                if (data) {
+                    // Find the participant with matching bib number
+                    const participant = Object.values(data).find(p => p.bibNumber === parseInt(bibNumber));
+                    if (participant) {
+                        const fullName = Object.keys(data).find(key => data[key].bibNumber === parseInt(bibNumber));
+                        displayBib(participant.bibNumber, fullName, participant.nickName || '');
+                    } else {
+                        alert("No participant found with bib number: " + bibNumber);
+                    }
+                } else {
+                    alert("No participant found with bib number: " + bibNumber);
+                }
+            });
+        }
+
+        // Function to export table data as PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add title
+            doc.setFontSize(18);
+            doc.setTextColor(40, 40, 40);
+            doc.text("Participants List", 14, 15);
+
+            // Get table data (excluding the Actions column)
+            const table = document.getElementById("participantsTable");
+            const headers = [];
+            const rows = [];
+
+            // Extract headers (excluding the Actions column)
+            table.querySelectorAll('thead th').forEach((th, index) => {
+                if (index < 4) { // Skip the Actions column
+                    headers.push(th.textContent);
+                }
+            });
+
+            // Extract rows (excluding the Actions column)
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach((td, index) => {
+                    if (index < 4) { // Skip the Actions column
+                        row.push(td.textContent);
+                    }
+                });
+                rows.push(row);
+            });
+
+            // Add table to PDF
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 20,
+                theme: 'striped', // Use a clean striped theme
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 4,
+                    valign: 'middle',
+                    halign: 'left',
+                    textColor: [0, 0, 0], // Black text
+                    fillColor: [255, 255, 255], // White background
+                },
+                headStyles: {
+                    fillColor: [80, 83, 230], // Header background color
+                    textColor: [255, 255, 255], // Header text color
+                    fontSize: 12,
+                    fontStyle: 'bold',
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245], // Alternate row background color
+                },
+                columnStyles: {
+                    0: { cellWidth: 25 }, // Bib Number
+                    1: { cellWidth: 50 }, // Full Name
+                    2: { cellWidth: 40 }, // Nick Name
+                    3: { cellWidth: 45 }, // Contact
+                },
+            });
+
+            // Save the PDF
+            doc.save("participants_list.pdf");
+        }
+
+        // Function to save the bib as an image in high quality (4K)
+        function saveBibAsImage() {
+            const bibContainer = document.getElementById("bibContainer");
+            
+            // Show loading message
+            const originalContent = bibContainer.innerHTML;
+            bibContainer.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%; font-size: 1.5rem; color: #d4af37;">Generating 4K Image...</div>';
+            
+            // Use html2canvas to capture the element
+            html2canvas(bibContainer, {
+                scale: 4, // 4x scale for 4K quality
+                logging: false,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null,
+                onclone: function(clonedDoc) {
+                    // Restore original content in the clone
+                    const clonedBib = clonedDoc.getElementById('bibContainer');
+                    clonedBib.innerHTML = originalContent;
+                    clonedBib.style.width = '600px'; // Fixed width for consistent sizing
+                    clonedBib.style.height = 'auto';
+                }
+            }).then(canvas => {
+                // Create a link to download the image
+                const link = document.createElement('a');
+                link.download = 'running-voucher-4k.png';
+                link.href = canvas.toDataURL('image/png', 1.0); // Highest quality
+                link.click();
+                
+                // Restore original content
+                bibContainer.innerHTML = originalContent;
+            });
+        }
+
+        // Toggle admin controls
+        function toggleAdminControls() {
+            const adminControls = document.getElementById("adminControls");
+            const tableContainer = document.getElementById("tableContainer");
+            const exportPdfBtn = document.getElementById("exportPdfBtn");
+            const adminToggleBtn = document.getElementById("adminToggleBtn");
+            
+            if (adminControls.style.display === "block") {
+                // Hide admin controls
+                adminControls.style.display = "none";
+                tableContainer.style.display = "none";
+                exportPdfBtn.style.display = "none";
+                adminToggleBtn.textContent = "Show Admin";
+            } else {
+                // Show admin controls
+                const password = prompt("Enter admin password:");
+                if (password === "8555") {
+                    adminControls.style.display = "block";
+                    tableContainer.style.display = "block";
+                    exportPdfBtn.style.display = "block";
+                    adminToggleBtn.textContent = "Hide Admin";
+                    fetchData(); // Load data when showing admin
+                } else {
+                    alert("Incorrect password!");
+                }
+            }
+        }
+
+        // Event listeners
+        document.getElementById("dataBody").addEventListener('click', function(event) {
+            if (event.target.classList.contains('delete-btn')) {
+                const fullName = event.target.getAttribute('data-id');
+                deleteParticipant(fullName);
+            } else if (event.target.classList.contains('edit-nickname-btn')) {
+                const fullName = event.target.getAttribute('data-id');
+                openEditNickNameModal(fullName);
+            } else if (event.target.classList.contains('edit-contact-btn')) {
+                const fullName = event.target.getAttribute('data-id');
+                openEditContactModal(fullName);
+            } else if (event.target.classList.contains('view-bib-btn')) {
+                const bibNumber = event.target.getAttribute('data-bib');
+                const fullName = event.target.getAttribute('data-name');
+                const nickName = event.target.getAttribute('data-nickname');
+                displayBib(bibNumber, fullName, nickName);
+            }
+        });
+
+        document.getElementById("searchBar").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                searchByBibNumber();
+            }
+        });
+
+        document.getElementById("searchButton").addEventListener("click", searchByBibNumber);
+        document.getElementById("adminToggleBtn").addEventListener("click", toggleAdminControls);
+        document.getElementById("hideAdminBtn").addEventListener("click", toggleAdminControls);
+
+        // Export to PDF button
+        document.getElementById("exportPdfBtn").addEventListener("click", exportToPDF);
+
+        // Modal event listeners
+        document.getElementById("confirmEditNickName").addEventListener("click", saveNickName);
+        document.getElementById("cancelEditNickName").addEventListener("click", closeEditNickNameModal);
+        document.getElementById("confirmEditContact").addEventListener("click", saveContact);
+        document.getElementById("cancelEditContact").addEventListener("click", closeEditContactModal);
+
+        // Click to download bib as 4K image
+        document.getElementById("bibContainer").addEventListener("click", function() {
+            saveBibAsImage();
+        });
+
+        // Fullscreen functionality
+        document.getElementById('fullscreenBtn').addEventListener('click', function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        // Show/hide fullscreen button based on fullscreen state
+        document.addEventListener('fullscreenchange', function() {
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            if (document.fullscreenElement) {
+                fullscreenBtn.textContent = '⛶ Exit';
+            } else {
+                fullscreenBtn.textContent = '⛶';
+            }
+        });
+
+        // Hide the bib container initially
+        document.getElementById("bibContainer").style.display = "none";
+    </script>
+</body>
+</html>
